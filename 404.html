@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page Not Found — NanoMunch</title>
+<style>
+  body{font-family:'DM Sans',sans-serif;background:#1A1A2E;color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:2rem;text-align:center;flex-direction:column}
+  h1{font-family:'Syne',sans-serif;font-size:clamp(2.5rem,8vw,5rem);color:#C9A84C;margin-bottom:.5rem}
+  p{font-size:1.1rem;color:rgba(255,255,255,.7);max-width:500px;line-height:1.7;margin-bottom:2rem}
+  .btn{background:#C9A84C;color:#1A1A2E;padding:.8rem 2rem;border-radius:8px;font-weight:700;text-decoration:none;font-size:1rem;transition:all .2s;display:inline-block}
+  .btn:hover{background:#9C7A2E;transform:translateY(-2px)}
+  .note{font-size:.85rem;color:rgba(255,255,255,.35);margin-top:2rem}
+  .note a{color:#C9A84C;text-decoration:underline}
+</style>
+</head>
+<body>
+<h1>404</h1>
+<p>Oops! The page you're looking for doesn't exist or has been moved.</p>
+<a href="/" class="btn">🏠 Return to NanoMunch Home</a>
+<p class="note">You'll be redirected automatically in <span id="countdown">5</span> seconds.</p>
+<script>
+  let seconds = 5;
+  const el = document.getElementById('countdown');
+  const interval = setInterval(() => {
+    seconds--;
+    el.textContent = seconds;
+    if (seconds <= 0) {
+      clearInterval(interval);
+      window.location.href = '/';
+    }
+  }, 1000);
+</script>
+</body>
+</html>

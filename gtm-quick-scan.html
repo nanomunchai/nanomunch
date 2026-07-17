@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GTM Quick Scan — NanoMunch | Free Go-to-Market Readiness Score</title>
+<meta name="description" content="Answer 7 questions. Get your GTM Readiness Score (0–100). Find out exactly where your growth is leaking — and what to fix first. Free, instant, no fluff.">
+<meta name="author" content="Phethile Nkosi, Fractional CMO, NanoMunch">
+<meta name="last-modified" content="2026-07-17">
+<meta property="og:title" content="GTM Quick Scan — Is Your Go-to-Market Actually Working?">
+<meta property="og:description" content="7 questions. 5 minutes. A score that tells you exactly what to fix first in your growth system.">
+<meta property="og:url" content="https://nanomunchai.github.io/nanomunch/gtm-quick-scan.html">
+<link rel="canonical" href="https://nanomunchai.github.io/nanomunch/gtm-quick-scan.html">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%231A1A2E'/><text y='24' x='4' font-size='22' font-family='Arial' font-weight='bold' fill='%23C9A84C'>N</text></svg>">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!-- intl-tel-input for phone validation -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+
+<!-- GA4 — replace G-XXXXXXXXXX -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+
+<!-- Schema -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"GTM Quick Scan","description":"A 7-question go-to-market readiness assessment that scores your GTM infrastructure 0–100 and provides a personalised action plan","url":"https://nanomunchai.github.io/nanomunch/gtm-quick-scan.html","applicationCategory":"BusinessApplication","isAccessibleForFree":true,"author":{"@type":"Person","name":"Phethile Nkosi","jobTitle":"Fractional CMO & AI Growth Strategist","sameAs":"https://linkedin.com/in/pnkosi"}}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --navy:#1A1A2E;--navy2:#12122A;
+  --gold:#C9A84C;--gold2:#9C7A2E;--gold3:#E8C96A;
+  --gold-lt:rgba(201,168,76,.1);
+  --white:#FFFFFF;--off:#F9F7F2;--pale:#FDF8EE;
+  --blue:#1B4F8A;--blue2:#2E75B6;
+  --body:#4A4A4A;--muted:#888888;
+  --border:rgba(201,168,76,.18);--border2:rgba(26,26,46,.08);
+  --green:#2A9D5C;--green-l:#E6F4ED;--green-b:rgba(42,157,92,.3);
+  --amber:#E07B1A;--amber-l:#FEF3E2;--amber-b:rgba(224,123,26,.3);
+  --red:#C13535;--red-l:#FDEAEA;--red-b:rgba(193,53,53,.3);
+  --shadow:0 4px 32px rgba(26,26,46,.08);
+  --shadow-g:0 8px 40px rgba(201,168,76,.2);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--body);min-height:100vh;line-height:1.6}
+
+/* NAV */
+nav{background:var(--white);border-bottom:1px solid var(--border2);padding:.9rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:var(--shadow)}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--navy);display:flex;align-items:center;gap:.5rem;text-decoration:none}
+.logo-mark{width:26px;height:26px;background:var(--navy);border-radius:5px;display:flex;align-items:center;justify-content:center}
+.logo-mark svg{width:16px;height:16px}
+.logo span{color:var(--gold)}
+.nav-back{font-size:.82rem;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:.3rem;transition:color .2s}
+.nav-back:hover{color:var(--navy)}
+
+/* HERO */
+.hero{background:var(--navy);padding:3.5rem 1.5rem 2.5rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 40%,rgba(201,168,76,.12),transparent 70%);pointer-events:none}
+.hero-inner{position:relative;max-width:640px;margin:0 auto}
+.hero-badge{display:inline-flex;align-items:center;gap:.45rem;background:rgba(201,168,76,.12);border:1px solid var(--border);border-radius:100px;padding:.32rem .85rem;font-size:.7rem;font-weight:700;color:var(--gold);margin-bottom:1.25rem;letter-spacing:.07em;text-transform:uppercase}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+.hero h1{font-family:'Syne',sans-serif;font-size:clamp(1.75rem,4.5vw,2.8rem);font-weight:800;color:var(--white);line-height:1.1;letter-spacing:-.03em;margin-bottom:.9rem}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero-sub{font-size:1rem;color:rgba(255,255,255,.6);line-height:1.7;max-width:520px;margin:0 auto .75rem;font-weight:300}
+.hero-promise{display:inline-flex;align-items:center;gap:.5rem;font-size:.78rem;color:rgba(255,255,255,.45);margin-top:.5rem}
+.hero-promise span{display:flex;align-items:center;gap:.3rem}
+.hero-promise span::before{content:'✓';color:var(--green);font-weight:700}
+
+/* PROGRESS */
+.progress-wrap{background:var(--white);padding:1.25rem 1.5rem;border-bottom:1px solid var(--border2);position:sticky;top:57px;z-index:40}
+.progress-inner{max-width:640px;margin:0 auto}
+.progress-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:.55rem}
+.progress-label{font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.progress-count{font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;color:var(--navy)}
+.progress-bar{height:6px;background:var(--border2);border-radius:100px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold2),var(--gold));border-radius:100px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+
+/* MAIN */
+.main{max-width:640px;margin:0 auto;padding:2rem 1.5rem 4rem}
+
+/* QUESTION CARD */
+.q-card{background:var(--white);border:1.5px solid var(--border2);border-radius:16px;padding:2rem;box-shadow:var(--shadow);display:none;animation:slideIn .35s ease both}
+.q-card.active{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.q-number{font-size:.68rem;font-weight:700;color:var(--gold2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.6rem;display:block}
+.q-text{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:700;color:var(--navy);line-height:1.3;margin-bottom:.35rem}
+.q-sub{font-size:.83rem;color:var(--muted);line-height:1.55;margin-bottom:1.5rem;font-weight:300}
+.options{display:flex;flex-direction:column;gap:.65rem}
+.option{display:flex;align-items:flex-start;gap:.85rem;padding:.85rem 1rem;border:1.5px solid var(--border2);border-radius:10px;cursor:pointer;transition:all .2s;background:var(--white);text-align:left;width:100%}
+.option:hover{border-color:var(--gold);background:var(--pale)}
+.option.selected{border-color:var(--gold);background:var(--pale)}
+.option-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--border2);flex-shrink:0;margin-top:2px;transition:all .2s;position:relative}
+.option.selected .option-dot{background:var(--gold);border-color:var(--gold)}
+.option.selected .option-dot::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:900;color:var(--navy)}
+.option-text{font-size:.88rem;color:var(--body);line-height:1.5}
+.option-score-hint{font-size:.7rem;color:var(--muted);margin-top:.15rem;display:block}
+
+/* NAV BUTTONS */
+.q-nav{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;gap:.75rem}
+.btn-prev{background:transparent;border:1.5px solid var(--border2);color:var(--muted);padding:.7rem 1.25rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;transition:all .2s}
+.btn-prev:hover{border-color:var(--navy);color:var(--navy)}
+.btn-next{background:var(--navy);color:var(--white);padding:.7rem 1.75rem;border-radius:8px;font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;border:none;flex:1}
+.btn-next:hover{background:var(--blue);transform:translateY(-1px)}
+.btn-next:disabled{opacity:.45;cursor:not-allowed;transform:none}
+
+/* EMAIL GATE */
+.email-card{background:var(--white);border:1.5px solid var(--border2);border-radius:16px;padding:2rem;box-shadow:var(--shadow);display:none;animation:slideIn .35s ease both;text-align:center}
+.email-card.active{display:block}
+.score-preview{font-family:'Syne',sans-serif;font-size:4.5rem;font-weight:800;color:var(--navy);line-height:1;margin:.75rem 0 .4rem;display:block}
+.score-label-text{font-size:.82rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;display:block;margin-bottom:.5rem}
+.score-bar-wrap{background:var(--border2);border-radius:100px;height:8px;max-width:300px;margin:.75rem auto 1.5rem;overflow:hidden}
+.score-bar-fill{height:100%;border-radius:100px;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.email-card h2{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700;color:var(--navy);margin-bottom:.45rem}
+.email-card p{font-size:.87rem;color:var(--muted);line-height:1.65;max-width:440px;margin:0 auto .9rem}
+
+/* Custom form fields */
+.form-group{text-align:left;margin-bottom:1.2rem}
+.form-group label{display:block;font-size:.82rem;font-weight:600;color:var(--body);margin-bottom:.3rem}
+.form-group label .required{color:var(--red);font-weight:700}
+.form-group label .optional{font-weight:400;color:var(--muted);font-size:.72rem}
+.form-group input{width:100%;padding:.7rem .9rem;border:1.5px solid var(--border2);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.93rem;color:var(--navy);transition:border-color .2s;background:var(--white)}
+.form-group input:focus{outline:none;border-color:var(--gold)}
+.form-group input.error{border-color:var(--red);background:var(--red-l)}
+.iti{width:100%}
+.iti__flag-container{left:0;right:auto}
+.iti__selected-flag{background:var(--white)!important;border-radius:8px 0 0 8px}
+.iti--allow-dropdown input{padding-left:52px!important}
+
+.email-field{display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;margin-bottom:.65rem}
+.email-field input{flex:1;min-width:210px;padding:.75rem 1rem;border:1.5px solid var(--border2);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.93rem;color:var(--navy)}
+.email-field input:focus{outline:none;border-color:var(--gold)}
+.email-field button{background:var(--gold);color:var(--navy);border:none;padding:.75rem 1.35rem;border-radius:8px;font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap}
+.email-field button:hover{background:var(--gold2);transform:translateY(-1px);box-shadow:var(--shadow-g)}
+.privacy-note{font-size:.72rem;color:var(--muted);margin-top:.3rem}
+
+.thank-you{display:none;padding:1.5rem;background:var(--green-l);border:1.5px solid var(--green-b);border-radius:12px;margin:1rem 0;text-align:left}
+.thank-you h3{font-family:'Syne',sans-serif;color:var(--green);font-size:1.1rem}
+.thank-you p{font-size:.9rem;color:var(--body);margin-top:.4rem}
+
+/* RESULTS */
+.result-card{background:var(--white);border-radius:16px;padding:2rem;box-shadow:var(--shadow);display:none;animation:slideIn .4s ease both}
+.result-card.active{display:block}
+.result-header{text-align:center;padding-bottom:1.5rem;margin-bottom:1.5rem;border-bottom:1px solid var(--border2)}
+.result-score{font-family:'Syne',sans-serif;font-size:5rem;font-weight:800;line-height:1;display:block;margin-bottom:.3rem}
+.result-grade{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:.5rem;display:block}
+.result-desc{font-size:.87rem;color:var(--muted);line-height:1.65;max-width:480px;margin:0 auto}
+.result-score-bar{background:var(--border2);border-radius:100px;height:10px;max-width:360px;margin:1rem auto 0;overflow:hidden}
+.result-score-fill{height:100%;border-radius:100px}
+
+/* Result sections */
+.result-section{margin-bottom:1.5rem}
+.result-section h3{font-family:'Syne',sans-serif;font-size:.97rem;font-weight:700;color:var(--navy);margin-bottom:.85rem;display:flex;align-items:center;gap:.5rem}
+.action-item{display:flex;gap:.85rem;padding:.85rem 1rem;border-radius:10px;border:1.5px solid;margin-bottom:.65rem}
+.action-item.critical{background:var(--red-l);border-color:var(--red-b)}
+.action-item.important{background:var(--amber-l);border-color:var(--amber-b)}
+.action-item.growth{background:var(--green-l);border-color:var(--green-b)}
+.action-icon{font-size:1.1rem;flex-shrink:0;margin-top:1px}
+.action-title{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;color:var(--navy);margin-bottom:.2rem}
+.action-text{font-size:.8rem;color:var(--body);line-height:1.55}
+
+/* CTA boxes */
+.cta-box{border-radius:12px;padding:1.4rem 1.5rem;margin-bottom:1rem;border:1.5px solid}
+.cta-box.red-cta{background:var(--red-l);border-color:var(--red-b)}
+.cta-box.amber-cta{background:var(--amber-l);border-color:var(--amber-b)}
+.cta-box.green-cta{background:var(--green-l);border-color:var(--green-b)}
+.cta-box h4{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:.35rem}
+.cta-box p{font-size:.83rem;color:var(--body);line-height:1.6;margin-bottom:.9rem}
+.cta-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.72rem 1.4rem;border-radius:8px;font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;text-decoration:none;border:none}
+.cta-btn.navy{background:var(--navy);color:var(--white)}
+.cta-btn.navy:hover{background:var(--blue);transform:translateY(-1px)}
+.cta-btn.gold{background:var(--gold);color:var(--navy)}
+.cta-btn.gold:hover{background:var(--gold2);transform:translateY(-1px);box-shadow:var(--shadow-g)}
+.cta-btn.outline{background:transparent;border:1.5px solid var(--navy);color:var(--navy)}
+.cta-btn.outline:hover{background:var(--navy);color:var(--white)}
+.btn-row{display:flex;gap:.65rem;flex-wrap:wrap}
+
+/* Score dimension breakdown */
+.dim-grid{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-top:.75rem}
+.dim-item{padding:.75rem .9rem;background:var(--off);border-radius:9px;border:1px solid var(--border2)}
+.dim-label{font-size:.7rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:.35rem}
+.dim-bar{background:var(--border2);border-radius:100px;height:5px;overflow:hidden;margin-bottom:.25rem}
+.dim-fill{height:100%;border-radius:100px;background:var(--gold)}
+.dim-score{font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;color:var(--navy)}
+
+/* Share strip */
+.share-strip{background:var(--pale);border:1.5px solid var(--border);border-radius:12px;padding:1.1rem 1.4rem;text-align:center;margin-top:1.5rem}
+.share-strip p{font-size:.82rem;color:var(--muted);margin-bottom:.75rem}
+.share-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.share-btn{padding:.5rem 1rem;border-radius:7px;font-size:.78rem;font-weight:600;cursor:pointer;border:1.5px solid var(--border2);background:var(--white);color:var(--body);transition:all .2s;display:flex;align-items:center;gap:.35rem}
+.share-btn:hover{border-color:var(--gold);color:var(--gold2)}
+
+/* Cookie */
+#cookie{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);z-index:999;background:var(--navy);color:var(--white);padding:.8rem 1.2rem;border-radius:10px;border:1px solid var(--gold);font-size:.78rem;display:flex;align-items:center;gap:.85rem;flex-wrap:wrap;max-width:600px;width:calc(100% - 2rem);box-shadow:var(--shadow-g)}
+#cookie a{color:var(--gold);text-decoration:underline}
+.ck-btn{background:var(--gold);color:var(--navy);border:none;padding:.38rem .9rem;border-radius:5px;font-weight:700;cursor:pointer;font-size:.78rem;white-space:nowrap}
+
+@media(max-width:480px){
+  .hero{padding:2.5rem 1rem 2rem}
+  .main{padding:1.5rem 1rem 3rem}
+  .q-card,.email-card,.result-card{padding:1.4rem}
+  .dim-grid{grid-template-columns:1fr}
+  h1{font-size:1.65rem}
+  .score-preview,.result-score{font-size:3.5rem}
+}
+</style>
+</head>
+<body>
+
+<!-- COOKIE -->
+<div id="cookie">
+  <p>We use cookies. <a href="/privacy.html">Privacy Policy</a></p>
+  <button class="ck-btn" onclick="closeCk()">Accept</button>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 18 18" fill="none"><path d="M3 15V3l5 8 5-8v12" stroke="#C9A84C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    Nano<span>Munch</span>
+  </a>
+  <a href="/" class="nav-back">← Back to NanoMunch</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge"><span class="hero-badge-dot"></span>Free GTM Assessment</div>
+    <h1>Most founders think they have<br>a <em>marketing</em> problem.</h1>
+    <p class="hero-sub">They don't. They have a systems problem. This 7-question scan finds yours — and tells you exactly what to fix first.</p>
+    <div class="hero-promise">
+      <span>5 minutes</span>
+      &nbsp;·&nbsp;
+      <span>Score 0–100</span>
+      &nbsp;·&nbsp;
+      <span>Personalised action plan</span>
+      &nbsp;·&nbsp;
+      <span>No fluff</span>
+    </div>
+  </div>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-wrap" id="progress-wrap">
+  <div class="progress-inner">
+    <div class="progress-meta">
+      <span class="progress-label">Your Progress</span>
+      <span class="progress-count" id="progress-count">Question 1 of 7</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill" style="width:14%"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- Q1: ICP Clarity -->
+  <div class="q-card active" id="q1">
+    <span class="q-number">Question 1 of 7 — Foundation</span>
+    <p class="q-text">How precisely can you describe the one customer who gets the most value from what you sell?</p>
+    <p class="q-sub">"Know your audience better than they know themselves." — NanoMunch Principle Vague ICPs are the single biggest cause of wasted marketing spend.</p>
+    <div class="options" id="opts-1">
+      <button class="option" onclick="selectOption(1,0,4,'ICP: Defined precisely')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">I can name their exact role, company size, industry, and the specific trigger that makes them buy right now</span><span class="option-score-hint">+20 pts — top-tier ICP clarity</span></div>
+      </button>
+      <button class="option" onclick="selectOption(1,1,3,'ICP: Mostly defined')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">I know the general profile but couldn't name the exact trigger or buying signal</span><span class="option-score-hint">+15 pts — solid foundation</span></div>
+      </button>
+      <button class="option" onclick="selectOption(1,2,2,'ICP: Roughly defined')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">I have a rough idea — mostly based on who's bought before, not who converts best</span><span class="option-score-hint">+10 pts — needs sharpening</span></div>
+      </button>
+      <button class="option" onclick="selectOption(1,3,0,'ICP: Not defined')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">We sell to anyone who shows interest — no specific profile defined</span><span class="option-score-hint">+0 pts — this is costing you money right now</span></div>
+      </button>
+    </div>
+    <div class="q-nav">
+      <span></span>
+      <button class="btn-next" id="next-1" onclick="goNext(1)" disabled>Next Question →</button>
+    </div>
+  </div>
+
+  <!-- Q2: Funnel Architecture -->
+  <div class="q-card" id="q2">
+    <span class="q-number">Question 2 of 7 — Pipeline</span>
+    <p class="q-text">What happens to a lead between the moment they first hear about you and the moment they pay?</p>
+    <p class="q-sub">"Every step must pull the prospect irresistibly to the next one — or they leave." — The Slippery Slide Principle Most funnels have gaps where leads silently disappear.</p>
+    <div class="options" id="opts-2">
+      <button class="option" onclick="selectOption(2,0,4,'Funnel: Fully mapped')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">Every stage is mapped, automated, and measured — I know where leads drop off and why</span><span class="option-score-hint">+20 pts — built for scale</span></div>
+      </button>
+      <button class="option" onclick="selectOption(2,1,3,'Funnel: Partially built')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">I have some stages — email sequences, maybe a landing page — but it's not fully connected</span><span class="option-score-hint">+15 pts — good start, gaps exist</span></div>
+      </button>
+      <button class="option" onclick="selectOption(2,2,1,'Funnel: Ad hoc')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">It's mostly ad hoc — leads come in and sales follows up manually, inconsistently</span><span class="option-score-hint">+5 pts — leaking revenue</span></div>
+      </button>
+      <button class="option" onclick="selectOption(2,3,0,'Funnel: No structure')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">No structured funnel — we rely on word of mouth and whoever reaches out</span><span class="option-score-hint">+0 pts — not scalable</span></div>
+      </button>
+    </div>
+    <div class="q-nav">
+      <button class="btn-prev" onclick="goPrev(2)">← Back</button>
+      <button class="btn-next" id="next-2" onclick="goNext(2)" disabled>Next Question →</button>
+    </div>
+  </div>
+
+  <!-- Q3: Messaging & Positioning -->
+  <div class="q-card" id="q3">
+    <span class="q-number">Question 3 of 7 — Positioning</span>
+    <p class="q-text">If your best prospect landed on your website right now, would they immediately understand why you're different from every alternative?</p>
+    <p class="q-sub">"Differentiate or perish. Generic positioning forces you to compete on price." Generic positioning forces you to compete on price. Specific positioning lets you command a premium.</p>
+    <div class="options" id="opts-3">
+      <button class="option" onclick="selectOption(3,0,4,'Positioning: Crystal clear')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">Yes — we have a clear unique mechanism that no competitor can credibly claim</span><span class="option-score-hint">+20 pts — strong moat</span></div>
+      </button>
+      <button class="option" onclick="selectOption(3,1,3,'Positioning: Mostly clear')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">Mostly — our positioning is solid but we still sound similar to 2–3 competitors</span><span class="option-score-hint">+15 pts — good, needs sharpening</span></div>
+      </button>
+      <button class="option" onclick="selectOption(3,2,1,'Positioning: Generic')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">Our messaging is fairly generic — "quality," "expertise," "results-driven"</span><span class="option-score-hint">+5 pts — this is why CAC is high</span></div>
+      </button>
+      <button class="option" onclick="selectOption(3,3,0,'Positioning: Not defined')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">Honestly, we haven't done proper positioning work — we describe what we do, not why we're different</span><span class="option-score-hint">+0 pts — urgent priority</span></div>
+      </button>
+    </div>
+    <div class="q-nav">
+      <button class="btn-prev" onclick="goPrev(3)">← Back</button>
+      <button class="btn-next" id="next-3" onclick="goNext(3)" disabled>Next Question →</button>
+    </div>
+  </div>
+
+  <!-- Q4: Lead Generation -->
+  <div class="q-card" id="q4">
+    <span class="q-number">Question 4 of 7 — Acquisition</span>
+    <p class="q-text">How predictable is your inbound lead flow right now?</p>
+    <p class="q-sub">The difference between "We get leads" and "We get 47 qualified leads per month from three predictable channels" is the difference between a business and a guessing game.</p>
+    <div class="options" id="opts-4">
+      <button class="option" onclick="selectOption(4,0,4,'Leads: Predictable system')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">Predictable — I know which channels produce leads, at what volume, and at what cost per lead</span><span class="option-score-hint">+20 pts — machine is running</span></div>
+      </button>
+      <button class="option" onclick="selectOption(4,1,3,'Leads: Somewhat predictable')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">Somewhat — I have 1–2 channels working but I couldn't confidently forecast next month's leads</span><span class="option-score-hint">+15 pts — needs systematising</span></div>
+      </button>
+      <button class="option" onclick="selectOption(4,2,1,'Leads: Inconsistent')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">Inconsistent — good months and bad months, largely dependent on referrals or my own outreach</span><span class="option-score-hint">+5 pts — feast or famine cycle</span></div>
+      </button>
+      <button class="option" onclick="selectOption(4,3,0,'Leads: Unpredictable')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">Unpredictable — leads come in randomly and I'm not sure what's actually driving them</span><span class="option-score-hint">+0 pts — foundational gap</span></div>
+      </button>
+    </div>
+    <div class="q-nav">
+      <button class="btn-prev" onclick="goPrev(4)">← Back</button>
+      <button class="btn-next" id="next-4" onclick="goNext(4)" disabled>Next Question →</button>
+    </div>
+  </div>
+
+  <!-- Q5: Measurement -->
+  <div class="q-card" id="q5">
+    <span class="q-number">Question 5 of 7 — Intelligence</span>
+    <p class="q-text">When you spend money on marketing, how clearly can you trace which spend produced which revenue?</p>
+    <p class="q-sub"> "Know your numbers — or someone else will spend them for you."</p>
+    <div class="options" id="opts-5">
+      <button class="option" onclick="selectOption(5,0,4,'Measurement: Full attribution')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">Full attribution — I can trace revenue back to specific campaigns, channels, and even individual touchpoints</span><span class="option-score-hint">+10 pts — data-driven</span></div>
+      </button>
+      <button class="option" onclick="selectOption(5,1,3,'Measurement: Partial')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">Partial — I know which channels drive leads but not which ones close into revenue</span><span class="option-score-hint">+8 pts — getting there</span></div>
+      </button>
+      <button class="option" onclick="selectOption(5,2,1,'Measurement: Basic')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">Basic — I track traffic and maybe conversions but not revenue attribution by channel</span><span class="option-score-hint">+4 pts — flying partly blind</span></div>
+      </button>
+      <button class="option" onclick="selectOption(5,3,0,'Measurement: None')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">Minimal — I look at revenue totals but can't connect them back to specific marketing activities</span><span class="option-score-hint">+0 pts — optimising blind</span></div>
+      </button>
+    </div>
+    <div class="q-nav">
+      <button class="btn-prev" onclick="goPrev(5)">← Back</button>
+      <button class="btn-next" id="next-5" onclick="goNext(5)" disabled>Next Question →</button>
+    </div>
+  </div>
+
+  <!-- Q6: Retention & LTV -->
+  <div class="q-card" id="q6">
+    <span class="q-number">Question 6 of 7 — Retention</span>
+    <p class="q-text">Once someone becomes a customer, how deliberately do you extend their lifetime value?</p>
+    <p class="q-sub">"The most expensive customer is the one you already acquired — and then lost." Retention is the fastest lever on LTV:CAC without spending a single dollar more on acquisition.</p>
+    <div class="options" id="opts-6">
+      <button class="option" onclick="selectOption(6,0,4,'Retention: Systemised')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">Systemised — onboarding, check-ins, upsell sequences, and renewal processes are all automated and measured</span><span class="option-score-hint">+10 pts — LTV machine</span></div>
+      </button>
+      <button class="option" onclick="selectOption(6,1,3,'Retention: Manual but intentional')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">Manual but intentional — I check in with customers but it's not automated or consistently tracked</span><span class="option-score-hint">+8 pts — good intent, needs systems</span></div>
+      </button>
+      <button class="option" onclick="selectOption(6,2,1,'Retention: Reactive')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">Reactive — I respond when customers reach out but don't have a proactive retention process</span><span class="option-score-hint">+4 pts — churn is likely higher than it should be</span></div>
+      </button>
+      <button class="option" onclick="selectOption(6,3,0,'Retention: None')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">Minimal — once someone is a customer, growth from that relationship is largely accidental</span><span class="option-score-hint">+0 pts — significant revenue leak</span></div>
+      </button>
+    </div>
+    <div class="q-nav">
+      <button class="btn-prev" onclick="goPrev(6)">← Back</button>
+      <button class="btn-next" id="next-6" onclick="goNext(6)" disabled>Next Question →</button>
+    </div>
+  </div>
+
+  <!-- Q7: Team & Execution -->
+  <div class="q-card" id="q7">
+    <span class="q-number">Question 7 of 7 — Execution</span>
+    <p class="q-text">How would you honestly rate your ability to execute marketing strategy consistently, week after week?</p>
+    <p class="q-sub">The best GTM strategy executed inconsistently loses to a mediocre strategy executed relentlessly. Every purchase is emotional, justified by logic — but execution is what creates the result.</p>
+    <div class="options" id="opts-7">
+      <button class="option" onclick="selectOption(7,0,4,'Execution: Systemised')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">High — we have documented processes, regular cadences, and someone accountable for each output</span><span class="option-score-hint">+20 pts — execution engine</span></div>
+      </button>
+      <button class="option" onclick="selectOption(7,1,3,'Execution: Mostly consistent')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">Moderate — we're fairly consistent but execution slips when things get busy</span><span class="option-score-hint">+15 pts — needs systematising</span></div>
+      </button>
+      <button class="option" onclick="selectOption(7,2,1,'Execution: Inconsistent')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">Inconsistent — we go hard for a few weeks then lose momentum and have to restart</span><span class="option-score-hint">+5 pts — feast or famine execution</span></div>
+      </button>
+      <button class="option" onclick="selectOption(7,3,0,'Execution: Ad hoc')">
+        <div class="option-dot"></div>
+        <div><span class="option-text">Ad hoc — marketing happens when we find time for it, which isn't often enough</span><span class="option-score-hint">+0 pts — strategy without execution is fiction</span></div>
+      </button>
+    </div>
+    <div class="q-nav">
+      <button class="btn-prev" onclick="goPrev(7)">← Back</button>
+      <button class="btn-next" id="next-7" onclick="showEmailGate()" disabled>See My Score →</button>
+    </div>
+  </div>
+
+  <!-- SCORE REVEAL + CUSTOM FORM -->
+  <div class="email-card" id="email-gate">
+    <span class="score-label-text">Your GTM Readiness Score</span>
+    <span class="score-preview" id="score-preview">—</span>
+    <div class="score-bar-wrap">
+      <div class="score-bar-fill" id="score-bar-preview"></div>
+    </div>
+    <div id="score-band-text" style="font-family:'Syne',sans-serif;font-size:.97rem;font-weight:700;margin:.5rem 0 1rem;min-height:1.5rem"></div>
+
+    <!-- Personalised Thank You message (hidden initially) -->
+    <div class="thank-you" id="thankYou">
+      <h3 id="thankYouTitle"></h3>
+      <p id="thankYouMessage"></p>
+    </div>
+
+    <!-- Form -->
+    <form id="userForm" onsubmit="submitForm(event)" style="text-align:left">
+      <div class="form-group">
+        <label for="fullname">Full Name <span class="required">*</span></label>
+        <input type="text" id="fullname" name="fullname" required placeholder="e.g. Sarah Chen">
+      </div>
+      <div class="form-group">
+        <label for="email">Email Address <span class="required">*</span></label>
+        <input type="email" id="email" name="email" required placeholder="sarah@company.com">
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone Number <span class="optional">(optional)</span></label>
+        <input type="tel" id="phone" name="phone" placeholder="+1 234 567 890">
+      </div>
+      <button type="submit" class="btn-gold" style="width:100%;padding:.85rem;border:none;border-radius:8px;font-family:'Syne',sans-serif;font-size:.97rem;font-weight:700;cursor:pointer;background:var(--gold);color:var(--navy);transition:all .2s">Submit &amp; Show My Results →</button>
+    </form>
+
+    <button onclick="showResults()" style="background:transparent;border:none;color:var(--muted);font-size:.78rem;cursor:pointer;margin-top:.5rem;text-decoration:underline">Show me the results now</button>
+    <p class="privacy-note">Your data is safe. We never share your information. <a href="/privacy.html" style="color:var(--gold2)">Privacy Policy</a></p>
+  </div>
+
+  <!-- RESULTS PANEL -->
+  <div class="result-card" id="results">
+    <div class="result-header">
+      <span class="result-score" id="result-score">0</span>
+      <span class="result-grade" id="result-grade"></span>
+      <p class="result-desc" id="result-desc"></p>
+      <div class="result-score-bar"><div class="result-score-fill" id="result-score-fill"></div></div>
+    </div>
+
+    <!-- Dimension breakdown -->
+    <div class="result-section">
+      <h3>📊 Your GTM Dimensions</h3>
+      <div class="dim-grid" id="dim-grid"></div>
+    </div>
+
+    <!-- Personalised actions -->
+    <div class="result-section">
+      <h3>🎯 Your Three Highest-Impact Actions This Week</h3>
+      <div id="action-items"></div>
+    </div>
+
+    <!-- Routing CTA -->
+    <div id="routing-cta"></div>
+
+    <!-- Share -->
+    <div class="share-strip">
+      <p>Know a founder who needs to see this? Share the GTM Quick Scan.</p>
+      <div class="share-btns">
+        <button class="share-btn" onclick="shareLinkedIn()">💼 Share on LinkedIn</button>
+        <button class="share-btn" onclick="copyLink()">🔗 Copy Link</button>
+        <a href="/" class="share-btn">🏠 Back to NanoMunch</a>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────
+const answers = {};   // {qNum: {optIdx, score, label}}
+const maxScores = {1:20,2:20,3:20,4:20,5:10,6:10,7:20}; // total = 100
+let totalScore = 0;
+let userEmail  = '';
+let userName   = '';
+let phoneInput = null;
+let userSubmitted = false;
+
+// ── COOKIE ─────────────────────────────────────────────────────
+function closeCk(){document.getElementById('cookie').style.display='none';localStorage.setItem('nm-ck','1')}
+if(localStorage.getItem('nm-ck'))document.getElementById('cookie').style.display='none';
+
+// ── OPTION SELECTION ────────────────────────────────────────────
+function selectOption(qNum, optIdx, score, label){
+  answers[qNum] = {optIdx, score: score * (maxScores[qNum]/4), label};
+  const opts = document.querySelectorAll(`#opts-${qNum} .option`);
+  opts.forEach((o,i) => o.classList.toggle('selected', i === optIdx));
+  document.getElementById(`next-${qNum}`).disabled = false;
+  if(typeof gtag !== 'undefined') gtag('event','question_answered',{question:qNum,answer:label});
+}
+
+// ── NAVIGATION ──────────────────────────────────────────────────
+function goNext(current){
+  if(!answers[current]){
+    document.getElementById(`next-${current}`).disabled = true;
+    return;
+  }
+  document.getElementById(`q${current}`).classList.remove('active');
+  if(current < 7){
+    document.getElementById(`q${current+1}`).classList.add('active');
+    updateProgress(current+1);
+  }
+  // Push state for back button
+  history.pushState({q: current+1}, '', '#q'+(current+1));
+}
+
+function goPrev(current){
+  document.getElementById(`q${current}`).classList.remove('active');
+  document.getElementById(`q${current-1}`).classList.add('active');
+  updateProgress(current-1);
+  history.pushState({q: current-1}, '', '#q'+(current-1));
+}
+
+function updateProgress(qNum){
+  const pct = (qNum/7)*100;
+  document.getElementById('progress-fill').style.width = pct+'%';
+  document.getElementById('progress-count').textContent = `Question ${qNum} of 7`;
+}
+
+// ── HANDLE BACK BUTTON ─────────────────────────────────────────
+window.addEventListener('popstate', function(event) {
+  const state = event.state;
+  if (state && state.q) {
+    // Show the question card
+    document.querySelectorAll('.q-card').forEach(c => c.classList.remove('active'));
+    const target = document.getElementById('q'+state.q);
+    if (target) target.classList.add('active');
+    updateProgress(state.q);
+  } else if (state && state.results) {
+    // If results were shown, we may need to re-show them
+  } else {
+    // Default: go back to first question
+    document.querySelectorAll('.q-card').forEach(c => c.classList.remove('active'));
+    document.getElementById('q1').classList.add('active');
+    updateProgress(1);
+  }
+});
+
+// ── EMAIL GATE ──────────────────────────────────────────────────
+function showEmailGate(){
+  if(!answers[7]) return;
+  // Calculate score
+  totalScore = Math.round(Object.values(answers).reduce((s,a) => s + a.score, 0));
+
+  // Show score reveal + form
+  document.getElementById('q7').classList.remove('active');
+  document.getElementById('progress-wrap').style.display = 'none';
+  const gate = document.getElementById('email-gate');
+  gate.classList.add('active');
+
+  // Show score
+  const preview = document.getElementById('score-preview');
+  preview.textContent = totalScore;
+  const bar = document.getElementById('score-bar-preview');
+  const barColor = totalScore >= 75 ? 'var(--green)' : totalScore >= 50 ? 'var(--amber)' : 'var(--red)';
+  bar.style.width = totalScore + '%';
+  bar.style.background = barColor;
+  preview.style.color = barColor;
+
+  // Show score band label
+  const band = document.getElementById('score-band-text');
+  if(totalScore >= 75){ band.textContent = '🟢 Strong Foundation'; band.style.color='var(--green)'; }
+  else if(totalScore >= 50){ band.textContent = '🟡 Solid Base — Revenue Leaks Present'; band.style.color='var(--amber)'; }
+  else { band.textContent = '🔴 Structural Gaps — Immediate Action Needed'; band.style.color='var(--red)'; }
+
+  gate.scrollIntoView({behavior:'smooth',block:'start'});
+  if(typeof gtag !== 'undefined') gtag('event','score_shown',{score: totalScore});
+
+  // Initialize intl-tel-input on phone field
+  if (!phoneInput) {
+    phoneInput = window.intlTelInput(document.querySelector("#phone"), {
+      separateDialCode: true,
+      preferredCountries: ["us", "gb", "za", "au", "ca"],
+      utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
+    });
+  }
+}
+
+// ── FORM SUBMISSION ─────────────────────────────────────────────
+function submitForm(e) {
+  e.preventDefault();
+  const name = document.getElementById('fullname').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+
+  // Validate
+  let valid = true;
+  if (!name) { valid = false; document.getElementById('fullname').classList.add('error'); } else { document.getElementById('fullname').classList.remove('error'); }
+  if (!email || !email.includes('@')) { valid = false; document.getElementById('email').classList.add('error'); } else { document.getElementById('email').classList.remove('error'); }
+  if (phone && phoneInput && !phoneInput.isValidNumber()) { valid = false; document.getElementById('phone').classList.add('error'); } else { document.getElementById('phone').classList.remove('error'); }
+
+  if (!valid) {
+    alert('Please correct the highlighted fields.');
+    return;
+  }
+
+  // Capture user info
+  userName = name;
+  userEmail = email;
+  userSubmitted = true;
+
+  // Show personalized thank-you
+  const thankDiv = document.getElementById('thankYou');
+  const titleEl = document.getElementById('thankYouTitle');
+  const msgEl = document.getElementById('thankYouMessage');
+
+  let title, message;
+  if (totalScore >= 75) {
+    title = `Thank you, ${userName}! 🙌`;
+    message = `Your GTM foundation is strong. You're in the top tier of operators. Let's schedule a call to scale further and turn that strength into predictable revenue growth.`;
+  } else if (totalScore >= 50) {
+    title = `Thanks, ${userName}! 💪`;
+    message = `You're on the right track but leaving revenue on the table. The gaps we identified are fixable — and fixing them will give you the biggest ROI. Let's pinpoint them together.`;
+  } else {
+    title = `Thank you for your honesty, ${userName}. 🚀`;
+    message = `Your results show clear structural gaps. The good news: fixing these is predictable and fast. We've seen founders like you double their pipeline in 60 days with the right intervention. Let's talk.`;
+  }
+  titleEl.textContent = title;
+  msgEl.textContent = message;
+  thankDiv.style.display = 'block';
+
+  // Hide the form (optional) and show results button
+  document.getElementById('userForm').style.display = 'none';
+
+  // Send data to Kit (optional) — here we just proceed to results
+  showResults();
+
+  if (typeof gtag !== 'undefined') gtag('event','email_captured',{source:'gtm_scan',score:totalScore});
+}
+
+// ── SHOW RESULTS ────────────────────────────────────────────────
+function showResults(){
+  // Ensure score is calculated
+  if (!totalScore) {
+    totalScore = Math.round(Object.values(answers).reduce((s,a) => s + a.score, 0));
+  }
+  document.getElementById('email-gate').classList.remove('active');
+  const result = document.getElementById('results');
+  result.classList.add('active');
+  result.scrollIntoView({behavior:'smooth',block:'start'});
+
+  // Score display
+  const scoreEl = document.getElementById('result-score');
+  const gradeEl = document.getElementById('result-grade');
+  const descEl  = document.getElementById('result-desc');
+  const fillEl  = document.getElementById('result-score-fill');
+
+  scoreEl.textContent = totalScore + '/100';
+
+  let grade, desc, fillColor;
+  if(totalScore >= 75){
+    grade = '🟢 Strong Foundation — Ready to Scale';
+    desc  = `Your GTM infrastructure is solid. With a score of ${totalScore}/100, you have the fundamentals in place to scale confidently. The opportunity now is optimisation — finding the final levers that push you from good to exceptional. Most founders at your level are leaving 20–30% of potential revenue untouched.`;
+    fillColor = 'var(--green)';
+  } else if(totalScore >= 50){
+    grade = '🟡 Solid Base — But Leaking Revenue';
+    desc  = `You're in the top half at ${totalScore}/100, which means you have something working. But there are specific gaps in your GTM system that are quietly costing you pipeline every week. The good news: at this score, fixing two or three things typically produces a disproportionate jump in results.`;
+    fillColor = 'var(--amber)';
+  } else {
+    grade = '🔴 Structural Gaps — Urgent Action Needed';
+    desc  = `Your score of ${totalScore}/100 reveals foundational gaps in your go-to-market system. This is not a criticism — it's one of the most common places founders get stuck. The challenge is that every gap compounds: unclear ICP leads to wasted ad spend, which leads to high CAC, which kills growth. The right intervention at this stage creates outsized results.`;
+    fillColor = 'var(--red)';
+  }
+
+  gradeEl.textContent = grade;
+  gradeEl.style.color = totalScore >= 75 ? 'var(--green)' : totalScore >= 50 ? 'var(--amber)' : 'var(--red)';
+  descEl.textContent = desc;
+  fillEl.style.background = fillColor;
+  fillEl.style.width = '0%';
+  setTimeout(()=> fillEl.style.transition='width 1.2s ease', 100);
+  setTimeout(()=> fillEl.style.width = totalScore+'%', 200);
+
+  // Animate score counter
+  let count = 0;
+  const target = totalScore;
+  const step = Math.ceil(target / 40);
+  const timer = setInterval(()=>{
+    count = Math.min(count + step, target);
+    scoreEl.textContent = count + '/100';
+    if(count >= target) clearInterval(timer);
+  }, 30);
+
+  // Dimension breakdown
+  buildDimensions();
+  buildActions();
+  buildCTA();
+
+  // Push state for back button to return to the form
+  history.pushState({results: true}, '', '#results');
+
+  if(typeof gtag !== 'undefined') gtag('event','results_shown',{score:totalScore,grade});
+}
+
+// ── DIMENSIONS ───────────────────────────────────────────────────
+const dimDefs = [
+  {label:'ICP Clarity',    q:1, max:20},
+  {label:'Funnel Design',  q:2, max:20},
+  {label:'Positioning',    q:3, max:20},
+  {label:'Lead Acquisition',q:4,max:20},
+  {label:'Measurement',    q:5, max:10},
+  {label:'Retention/LTV',  q:6, max:10},
+  {label:'Execution',      q:7, max:20},
+];
+function buildDimensions(){
+  const grid = document.getElementById('dim-grid');
+  grid.innerHTML = dimDefs.map(d => {
+    const sc   = answers[d.q] ? Math.round(answers[d.q].score) : 0;
+    const pct  = Math.round((sc / d.max) * 100);
+    const col  = pct >= 75 ? 'var(--green)' : pct >= 50 ? 'var(--gold)' : 'var(--red)';
+    return `<div class="dim-item">
+      <span class="dim-label">${d.label}</span>
+      <div class="dim-bar"><div class="dim-fill" style="width:${pct}%;background:${col}"></div></div>
+      <span class="dim-score">${sc}/${d.max}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── PERSONALISED ACTIONS ─────────────────────────────────────────
+function buildActions(){
+  const sorted = dimDefs
+    .map(d => ({...d, score: answers[d.q] ? answers[d.q].score : 0, pct: answers[d.q] ? (answers[d.q].score/d.max)*100 : 0}))
+    .sort((a,b) => a.pct - b.pct);
+
+  const top3 = sorted.slice(0,3);
+  const actionMap = {
+    1: {title:'Sharpen Your ICP to One Exact Segment', text:'Run a "best customer" analysis this week. List your 5 happiest, highest-value clients. Find the one attribute they share that your average client doesn\'t. That attribute is your real ICP. Rebuild all messaging around that profile.', type:'critical'},
+    2: {title:'Map and Fill the Gaps in Your Funnel', text:'Draw your current funnel on paper. Mark every step where a prospect could disappear without a structured next action. Each gap is a revenue leak. Fix the biggest gap first — usually the hand-off from lead to first conversation.', type:'critical'},
+    3: {title:'Define Your Unique Mechanism', text:'Answer this: what is the one thing about how you deliver results that no competitor does in exactly the same way? That is your unique mechanism. Name it. Put it in your headline. Make it specific enough that a prospect couldn\'t copy-paste it onto a competitor\'s site.', type:'important'},
+    4: {title:'Build One Predictable Lead Channel', text:'Pick the one lead source that has produced your best clients. Document exactly how it works. Create a repeatable process that generates at minimum 10 qualified conversations per month from that single channel before adding new ones.', type:'important'},
+    5: {title:'Connect Marketing Spend to Revenue', text:'Install GA4 goal tracking this week. Set up UTM parameters on every campaign link. In your CRM, tag each deal with the lead source. In 30 days you will know which channels produce revenue, not just leads.', type:'important'},
+    6: {title:'Build a 5-Touch Onboarding Sequence', text:'Map what a new client experiences in their first 30 days. Create 5 deliberate touchpoints: a welcome email, a day-7 check-in, a day-14 value email, a day-21 usage review, and a day-30 results conversation. This alone reduces early churn by 20–40%.', type:'growth'},
+    7: {title:'Install a Weekly Execution Rhythm', text:'Block the same 2-hour slot every week for marketing execution — no exceptions. Create a 10-item weekly checklist of non-negotiable marketing activities. Review it Friday. What didn\'t get done is what kills momentum; knowing it means you can fix it.', type:'growth'},
+  };
+
+  const container = document.getElementById('action-items');
+  container.innerHTML = top3.map((d,i) => {
+    const a = actionMap[d.q];
+    return `<div class="action-item ${i===0?'critical':i===1?'important':'growth'}">
+      <span class="action-icon">${i===0?'🔴':i===1?'🟡':'🟢'}</span>
+      <div>
+        <div class="action-title">${a.title}</div>
+        <div class="action-text">${a.text}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── ROUTING CTA ─────────────────────────────────────────────────
+function buildCTA(){
+  const cta = document.getElementById('routing-cta');
+  const calendly = 'https://calendly.com/nanomunchai/free-strategy-call-nanomunch';
+  if(totalScore < 50){
+    cta.innerHTML = `<div class="cta-box red-cta">
+      <h4>Your score suggests you need a structural fix — not more tactics.</h4>
+      <p>A GTM Sprint is a 4-week intensive that addresses exactly what your scan revealed: ICP, positioning, funnel architecture, and a 90-day execution plan your team can actually run. Most clients see measurable improvement within the first 30 days.</p>
+      <div class="btn-row">
+        <a href="${calendly}" target="_blank" class="cta-btn navy">Book a Free Discovery Call →</a>
+        <a href="/" class="cta-btn outline">Learn More About NanoMunch</a>
+      </div>
+    </div>`;
+  } else if(totalScore < 75){
+    cta.innerHTML = `<div class="cta-box amber-cta">
+      <h4>You're close — a targeted intervention closes the gap fast.</h4>
+      <p>At your score, you don't need to rebuild from scratch. You need a 2-hour Strategy Audit that identifies the specific 2–3 levers that will move your score — and your revenue — most quickly. Past clients at this score typically see their pipeline improve within 60 days.</p>
+      <div class="btn-row">
+        <a href="${calendly}" target="_blank" class="cta-btn gold">Book a Strategy Audit →</a>
+        <a href="/" class="cta-btn outline">View All Services</a>
+      </div>
+    </div>`;
+  } else {
+    cta.innerHTML = `<div class="cta-box green-cta">
+      <h4>You've built something solid. Now let's scale it.</h4>
+      <p>With a strong GTM foundation, the highest-leverage move is AI-powered scaling: automating what's working, expanding to new channels systematically, and building the data infrastructure to sustain growth. A Fractional CMO engagement typically 3–5× the output without 3–5× the headcount.</p>
+      <div class="btn-row">
+        <a href="${calendly}" target="_blank" class="cta-btn navy">Discuss a Fractional CMO Retainer →</a>
+        <a href="/" class="cta-btn outline">View All Services</a>
+      </div>
+    </div>`;
+  }
+}
+
+// ── SHARE ────────────────────────────────────────────────────────
+function shareLinkedIn(){
+  const url = encodeURIComponent('https://nanomunchai.github.io/nanomunch/gtm-quick-scan.html');
+  const text = encodeURIComponent(`I just scored ${totalScore}/100 on the NanoMunch GTM Quick Scan. It found my top 3 growth gaps in 5 minutes — free, no fluff. Worth trying if your marketing feels like guesswork.`);
+  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}&summary=${text}`, '_blank');
+}
+function copyLink(){
+  navigator.clipboard.writeText('https://nanomunchai.github.io/nanomunch/gtm-quick-scan.html').then(()=>{
+    alert('Link copied! Share it with a founder who needs this.');
+  });
+}
+</script>
+</body>
+</html>
