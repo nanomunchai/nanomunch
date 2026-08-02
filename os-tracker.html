@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NanoMunch OS — Internal Tracker Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<style>
+/* ============================================================
+   DESIGN TOKENS — Sage & Clay, color-psychology grounded
+   Sage = calm, grounded, trust (primary / progress)
+   Clay  = warm, human, gentle urgency (accent / attention)
+   Sand  = structure, quiet neutrality (borders / surfaces)
+   Deliberately muted — nothing saturated, nothing alarming.
+   ============================================================ */
+:root{
+  --bg:#F6F4EE;
+  --surface:#FFFFFF;
+  --surface-2:#FBFAF6;
+  --ink:#33362F;
+  --ink-soft:#767A6E;
+  --ink-faint:#A5A899;
+
+  --sage:#7E9683;
+  --sage-deep:#5A7360;
+  --sage-tint:#E7EEE6;
+
+  --clay:#C08966;
+  --clay-deep:#9C6640;
+  --clay-tint:#F3E4D8;
+
+  --sand:#E6DFCC;
+  --sand-deep:#D3C9AE;
+
+  --status-done:#7E9683;
+  --status-done-tint:#E7EEE6;
+  --status-progress:#7C93AD;
+  --status-progress-tint:#E6ECF2;
+  --status-blocked:#C08966;
+  --status-blocked-tint:#F3E4D8;
+  --status-notstarted:#A5A899;
+  --status-notstarted-tint:#EDECE5;
+
+  --priority-critical:#A66446;
+  --priority-high:#B99257;
+  --priority-medium:#7E9683;
+  --priority-low:#A5A899;
+
+  --radius:14px;
+  --radius-sm:8px;
+  --shadow:0 2px 20px rgba(51,54,47,.06);
+  --shadow-hover:0 6px 28px rgba(51,54,47,.1);
+  --font-head:'Syne',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-body);background:var(--bg);color:var(--ink);line-height:1.6}
+a{text-decoration:none;color:inherit}
+:focus-visible{outline:2.5px solid var(--sage-deep);outline-offset:2px}
+
+/* ---------- internal-use banner ---------- */
+.internal-banner{
+  background:var(--clay-deep);color:#fff;text-align:center;
+  font-size:.78rem;font-weight:600;padding:.55rem 1rem;letter-spacing:.02em;
+}
+.internal-banner i{margin-right:.4rem}
+
+.app{max-width:1360px;margin:0 auto;padding:1.5rem}
+
+/* ---------- header ---------- */
+.app-header{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;
+  padding:1rem 1.5rem;background:var(--surface);border-radius:var(--radius);
+  box-shadow:var(--shadow);margin-bottom:1.25rem;
+}
+.logo{font-family:var(--font-head);font-weight:800;font-size:1.3rem;color:var(--ink);display:flex;align-items:center;gap:.6rem}
+.logo-mark{width:34px;height:34px;background:var(--sage-deep);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-mark svg{width:22px;height:22px}
+.logo span.brand{color:var(--sage-deep)}
+.logo span.sub{font-family:var(--font-body);font-weight:400;font-size:.68rem;color:var(--ink-faint);margin-left:.3rem}
+
+.header-actions{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.view-toggle{display:flex;background:var(--surface-2);border-radius:100px;padding:.2rem;border:1px solid var(--sand)}
+.view-toggle button{
+  border:none;background:none;padding:.4rem 1rem;border-radius:100px;font-family:var(--font-body);
+  font-weight:600;font-size:.78rem;color:var(--ink-soft);cursor:pointer;transition:all .2s;
+}
+.view-toggle button.active{background:var(--sage-deep);color:#fff}
+
+.badge{font-size:.7rem;font-weight:600;color:var(--ink-soft);background:var(--surface-2);padding:.35rem .8rem;border-radius:100px;border:1px solid var(--sand)}
+
+.btn{padding:.5rem 1.1rem;border-radius:9px;font-family:var(--font-body);font-weight:600;font-size:.82rem;
+  cursor:pointer;transition:all .2s;border:1.5px solid transparent;display:inline-flex;align-items:center;gap:.4rem}
+.btn-primary{background:var(--sage-deep);color:#fff;border-color:var(--sage-deep)}
+.btn-primary:hover{background:var(--sage);transform:translateY(-1px);box-shadow:var(--shadow-hover)}
+.btn-outline{background:transparent;color:var(--ink);border-color:var(--sand-deep)}
+.btn-outline:hover{border-color:var(--sage-deep);color:var(--sage-deep)}
+.btn-clay{background:var(--clay);color:#fff;border-color:var(--clay)}
+.btn-clay:hover{background:var(--clay-deep)}
+
+/* ---------- stats ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;margin-bottom:1.25rem}
+.stat-card{background:var(--surface);border-radius:var(--radius);padding:1rem 1.1rem;box-shadow:var(--shadow);text-align:center}
+.stat-card .num{font-family:var(--font-head);font-size:1.7rem;font-weight:800;color:var(--ink);line-height:1.1}
+.stat-card .lbl{font-size:.68rem;font-weight:600;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;display:block;margin-top:.2rem}
+.stat-card .num.sage{color:var(--sage-deep)}
+.stat-card .num.clay{color:var(--clay-deep)}
+
+/* ============================================================
+   CIRCULAR VISUALS — signature element: "track garden" of rings
+   ============================================================ */
+.charts-row{display:grid;grid-template-columns:1.1fr 1.4fr;gap:1rem;margin-bottom:1.25rem}
+.chart-box{background:var(--surface);border-radius:var(--radius);padding:1.4rem;box-shadow:var(--shadow)}
+.chart-box h4{font-family:var(--font-head);font-size:.85rem;font-weight:700;color:var(--ink);margin-bottom:1rem;display:flex;align-items:center;gap:.45rem}
+.chart-box h4 i{color:var(--sage-deep)}
+
+/* overall donut + status breakdown, one visual */
+.donut-wrap{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;justify-content:center}
+.donut-svg{width:150px;height:150px;flex-shrink:0}
+.donut-center-label{font-family:var(--font-head);font-size:1.5rem;font-weight:800;fill:var(--ink)}
+.donut-center-sub{font-family:var(--font-body);font-size:.55rem;fill:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em}
+.donut-legend{display:flex;flex-direction:column;gap:.55rem}
+.donut-legend-item{display:flex;align-items:center;gap:.5rem;font-size:.8rem}
+.donut-legend-item .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.donut-legend-item .count{margin-left:auto;font-weight:700;color:var(--ink);padding-left:1rem}
+
+/* track garden: cluster of small rings */
+.track-garden{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:1rem}
+.track-ring-item{display:flex;flex-direction:column;align-items:center;gap:.35rem;text-align:center}
+.track-ring-svg{width:64px;height:64px}
+.track-ring-item .t-label{font-size:.64rem;font-weight:600;color:var(--ink-soft);line-height:1.25;max-width:90px}
+.track-ring-item .t-pct{font-family:var(--font-head);font-size:.78rem;font-weight:800;fill:var(--ink)}
+
+/* ---------- filter bar ---------- */
+.filter-bar{display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:1.1rem;padding:.85rem 1.1rem;
+  background:var(--surface);border-radius:var(--radius);align-items:center}
+.filter-group{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
+.filter-group .label{font-size:.68rem;font-weight:600;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.05em}
+.filter-bar select,.filter-bar input{
+  padding:.4rem .75rem;border-radius:var(--radius-sm);border:1.5px solid var(--sand);
+  font-family:var(--font-body);font-size:.8rem;color:var(--ink);background:var(--surface-2);
+}
+.filter-bar select:focus,.filter-bar input:focus{outline:none;border-color:var(--sage-deep)}
+.search-wrap{display:flex;align-items:center;gap:.4rem;margin-left:auto}
+.search-wrap input{min-width:180px}
+
+/* ---------- task board ---------- */
+.task-board{display:flex;flex-direction:column;gap:.55rem}
+.task-card{background:var(--surface);border-radius:var(--radius);padding:.9rem 1.1rem;box-shadow:var(--shadow);
+  transition:all .2s;cursor:pointer;display:flex;flex-wrap:wrap;align-items:center;gap:.55rem .9rem;
+  border-left:3px solid transparent;}
+.task-card:hover{box-shadow:var(--shadow-hover);border-left-color:var(--sage)}
+.task-card.is-sub{margin-left:1.4rem;background:var(--surface-2)}
+.task-card .task-id{font-family:var(--font-head);font-weight:700;font-size:.66rem;color:var(--ink-faint);min-width:52px}
+.task-card .task-name{flex:1;font-weight:500;font-size:.88rem;color:var(--ink);min-width:150px}
+.task-card .task-track{font-size:.63rem;font-weight:600;padding:.22rem .65rem;border-radius:100px;background:var(--sage-tint);color:var(--sage-deep);white-space:nowrap}
+.pill{font-size:.63rem;font-weight:600;padding:.22rem .65rem;border-radius:100px;white-space:nowrap}
+.pill.done{background:var(--status-done-tint);color:var(--status-done)}
+.pill.in-progress{background:var(--status-progress-tint);color:var(--status-progress)}
+.pill.blocked{background:var(--status-blocked-tint);color:var(--status-blocked)}
+.pill.not-started{background:var(--status-notstarted-tint);color:var(--ink-soft)}
+.dot-priority{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot-priority.critical{background:var(--priority-critical)}
+.dot-priority.high{background:var(--priority-high)}
+.dot-priority.medium{background:var(--priority-medium)}
+.dot-priority.low{background:var(--priority-low)}
+.priority-label{font-size:.68rem;font-weight:600;color:var(--ink-soft);display:flex;align-items:center;gap:.35rem}
+
+.task-progress{display:flex;align-items:center;gap:.4rem;min-width:74px}
+.task-progress .bar{width:44px;height:5px;background:var(--sand);border-radius:100px;overflow:hidden}
+.task-progress .bar .fill{height:100%;border-radius:100px;background:var(--sage);transition:width .4s ease}
+.task-progress .pctnum{font-size:.68rem;font-weight:700;color:var(--ink-soft);min-width:30px}
+
+.dep-flag{font-size:.68rem;color:var(--clay-deep);display:flex;align-items:center;gap:.3rem;white-space:nowrap}
+
+.task-actions{display:flex;gap:.25rem;margin-left:auto}
+.task-actions button{background:none;border:none;padding:.25rem .45rem;cursor:pointer;color:var(--ink-faint);border-radius:5px;transition:all .2s;font-size:.78rem}
+.task-actions button:hover{background:var(--sage-tint);color:var(--sage-deep)}
+.task-actions .del:hover{background:var(--clay-tint);color:var(--clay-deep)}
+
+/* detail panel */
+.task-detail{display:none;padding:1rem 1.2rem;background:var(--surface-2);border-radius:var(--radius);margin-top:.4rem;
+  border-left:3px solid var(--sage);font-size:.82rem;color:var(--ink);line-height:1.7}
+.task-detail.open{display:block}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem 1.5rem;margin-bottom:.6rem}
+.detail-item{display:flex;gap:.4rem}
+.detail-item .label{font-weight:600;color:var(--ink-faint);min-width:80px;font-size:.7rem;text-transform:uppercase;letter-spacing:.04em}
+.detail-item .value{color:var(--ink);font-weight:500}
+
+.dep-chips{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.3rem}
+.dep-chip{font-size:.7rem;font-weight:600;padding:.25rem .6rem;border-radius:100px;display:inline-flex;align-items:center;gap:.3rem}
+.dep-chip.ready{background:var(--status-done-tint);color:var(--status-done)}
+.dep-chip.waiting{background:var(--status-blocked-tint);color:var(--status-blocked)}
+
+.notes-box{margin-top:.6rem;padding:.7rem .9rem;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--sand);font-size:.8rem}
+.notes-box.private{border-left:3px solid var(--clay)}
+.notes-box .tag{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--clay-deep);display:flex;align-items:center;gap:.3rem;margin-bottom:.35rem}
+.notes-box.shared .tag{color:var(--sage-deep)}
+.next-action{margin-top:.6rem;padding:.7rem .9rem;background:var(--sage-tint);border-radius:var(--radius-sm);border-left:3px solid var(--sage-deep);font-size:.8rem}
+.next-action strong{color:var(--ink)}
+
+.detail-actions{margin-top:.7rem;display:flex;gap:.4rem;flex-wrap:wrap}
+.detail-actions .btn{padding:.3rem .8rem;font-size:.74rem}
+
+/* ---------- add/edit form ---------- */
+.add-task-form{background:var(--surface);border-radius:var(--radius);padding:1.3rem;box-shadow:var(--shadow);margin-top:1.25rem;display:none}
+.add-task-form.open{display:block}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.75rem;margin-bottom:.75rem}
+.add-task-form label{font-size:.68rem;font-weight:600;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:.25rem}
+.add-task-form input,.add-task-form select,.add-task-form textarea{
+  width:100%;padding:.5rem .7rem;border:1.5px solid var(--sand);border-radius:var(--radius-sm);
+  font-family:var(--font-body);font-size:.84rem;color:var(--ink);background:var(--surface-2)}
+.add-task-form input:focus,.add-task-form select:focus,.add-task-form textarea:focus{outline:none;border-color:var(--sage-deep)}
+.add-task-form textarea{min-height:60px;resize:vertical}
+.form-actions{display:flex;gap:.6rem;flex-wrap:wrap}
+
+.empty-state{text-align:center;padding:2.5rem 1.5rem;color:var(--ink-faint)}
+.empty-state .icon{font-size:2.2rem;margin-bottom:.5rem;opacity:.4}
+
+footer.note{text-align:center;font-size:.72rem;color:var(--ink-faint);margin-top:1.5rem;padding:1rem}
+
+@media (max-width:1024px){.charts-row{grid-template-columns:1fr}}
+@media (max-width:768px){
+  .app{padding:1rem}
+  .app-header{flex-direction:column;align-items:stretch;text-align:center}
+  .header-actions{justify-content:center}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .filter-bar{flex-direction:column;align-items:stretch}
+  .search-wrap{margin-left:0}
+  .search-wrap input{min-width:auto;width:100%}
+  .task-card{flex-direction:column;align-items:stretch;padding:.8rem}
+  .task-card.is-sub{margin-left:0}
+  .task-actions{margin-left:0;justify-content:flex-end}
+  .detail-grid{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="internal-banner"><i class="fas fa-lock"></i>Internal prototype — real NanoMunch operational data. Do not deploy this file publicly or share the link outside NanoMunch.</div>
+
+<div class="app" id="app">
+  <header class="app-header">
+    <div class="logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 100 100" fill="none"><rect width="100" height="100" rx="8" fill="#5A7360"/><text x="50" y="66" font-family="Syne, sans-serif" font-size="54" font-weight="800" fill="#F6F4EE" text-anchor="middle" letter-spacing="-2">N</text></svg>
+      </div>
+      Nano<span class="brand">Munch</span><span class="sub">OS · Internal</span>
+    </div>
+    <div class="header-actions">
+      <div class="view-toggle">
+        <button id="viewMineBtn" class="active" onclick="setView('mine')"><i class="fas fa-user"></i> My View</button>
+        <button id="viewClientBtn" onclick="setView('client')"><i class="fas fa-eye"></i> Client View</button>
+      </div>
+      <span class="badge" id="taskCount">0 tasks</span>
+      <button class="btn btn-primary" onclick="toggleAddForm()"><i class="fas fa-plus"></i> Add Task</button>
+      <button class="btn btn-outline" onclick="exportData()"><i class="fas fa-download"></i> Export</button>
+    </div>
+  </header>
+
+  <div class="stats" id="statsRow"></div>
+
+  <div class="charts-row">
+    <div class="chart-box">
+      <h4><i class="fas fa-circle-notch"></i> Status Breakdown</h4>
+      <div class="donut-wrap" id="donutWrap"></div>
+    </div>
+    <div class="chart-box">
+      <h4><i class="fas fa-seedling"></i> Progress by Track</h4>
+      <div class="track-garden" id="trackGarden"></div>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-group">
+      <span class="label">Track</span>
+      <select id="filterTrack" onchange="renderTasks()"><option value="all">All</option></select>
+    </div>
+    <div class="filter-group">
+      <span class="label">Status</span>
+      <select id="filterStatus" onchange="renderTasks()">
+        <option value="all">All</option>
+        <option value="Completed">Completed</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Blocked">Blocked</option>
+        <option value="Not Started">Not Started</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <span class="label">Priority</span>
+      <select id="filterPriority" onchange="renderTasks()">
+        <option value="all">All</option>
+        <option value="Critical">Critical</option>
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+      </select>
+    </div>
+    <div class="search-wrap">
+      <i class="fas fa-search" style="color:var(--ink-faint);font-size:.8rem;"></i>
+      <input type="text" id="searchInput" placeholder="Search tasks..." oninput="renderTasks()" />
+    </div>
+  </div>
+
+  <div class="task-board" id="taskBoard"></div>
+
+  <div class="add-task-form" id="addTaskForm">
+    <h4 style="font-family:var(--font-head);font-size:1rem;color:var(--ink);margin-bottom:.85rem;"><i class="fas fa-plus-circle" style="color:var(--sage-deep);"></i> Add / Edit Task</h4>
+    <div class="form-grid">
+      <div><label>Task Name *</label><input type="text" id="newTaskName" placeholder="e.g. Build pricing calculator" /></div>
+      <div><label>Track</label><select id="newTrack"></select></div>
+      <div><label>Status</label><select id="newStatus"><option>Not Started</option><option>In Progress</option><option>Blocked</option><option>Completed</option></select></div>
+      <div><label>Priority</label><select id="newPriority"><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></div>
+      <div><label>Due Date</label><input type="date" id="newDueDate" /></div>
+      <div><label>% Done</label><input type="number" id="newPct" min="0" max="100" value="0" /></div>
+      <div><label>Depends On (ID)</label><input type="text" id="newDependsOn" placeholder="e.g. NM-02" /></div>
+      <div><label>Revenue ($)</label><input type="number" id="newRevenue" min="0" value="0" /></div>
+      <div><label>Leads</label><input type="number" id="newLeads" min="0" value="0" /></div>
+      <div style="grid-column:1/-1;"><label>Private Notes (internal only — never shown in Client View)</label><textarea id="newNotes" placeholder="Internal how-to, credentials, sensitive steps..."></textarea></div>
+      <div style="grid-column:1/-1;"><label>Shared Update (visible to client)</label><textarea id="newSharedUpdate" placeholder="Client-safe progress summary..."></textarea></div>
+      <div style="grid-column:1/-1;"><label>Next Action</label><input type="text" id="newNextAction" placeholder="What happens next..." /></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="addTask()"><i class="fas fa-save"></i> Save Task</button>
+      <button class="btn btn-outline" onclick="toggleAddForm()">Cancel</button>
+    </div>
+  </div>
+
+  <footer class="note">Design prototype · sage &amp; clay palette · phase 1 (local, single-user) — shared client boards and per-client links come in phase 2.</footer>
+</div>
+
+<script>
+// ============================================================
+// DATA — extracted from NanoMunch_OS_Tracker.xlsx (fixed), 70 tasks / 17 tracks
+// ============================================================
+const RAW_TASKS = [{"id":"NM-01","track":"NanoMunch","level":"MAIN","task":"Register nanomunch.com domain","status":"Completed","pct":100,"priority":"High","startDate":"2026-05-01","dueDate":"2026-05-01","estMin":30,"actMin":null,"dependsOn":null,"unlocks":"NM-02","serviceProvider":"Cloudflare Registrar","expectedOutput":"Domain live, auto-renew ON, DNSSEC enabled","actualOutput":null,"revenue":0,"leads":0,"notes":"1. Go to dash.cloudflare.com \u2192 Domain Registration \u2192 Register Domains\n2. Search nanomunch.com \u2192 Add to cart \u2192 Checkout (~$10.44)\n3. Enable Auto-Renew immediately\n4. Enable DNSSEC under DNS settings","completedDate":null,"nextAction":"Confirm auto-renew is active"},{"id":"NM-01a","track":"NanoMunch","level":"sub","task":"\u21b3 Verify DNS propagation globally","status":"Completed","pct":100,"priority":"High","startDate":"2026-05-01","dueDate":"2026-05-01","estMin":5,"actMin":null,"dependsOn":"NM-01","unlocks":"NM-02","serviceProvider":"dnschecker.org","expectedOutput":"All regions show correct A/CNAME records","actualOutput":null,"revenue":0,"leads":0,"notes":"Go to dnschecker.org \u2192 enter nanomunch.com \u2192 check all regions show Cloudflare IPs","completedDate":null,"nextAction":"Done \u2014 move to NM-02"},{"id":"NM-02","track":"SSL Fix","level":"MAIN","task":"Fix nanomunch.com SSL \u2014 Cloudflare Pages bug","status":"Blocked","pct":30,"priority":"Critical","startDate":"2026-05-13","dueDate":"2026-05-13","estMin":45,"actMin":null,"dependsOn":"NM-01","unlocks":"NM-03,NM-04,NM-05,LI-02b,UW-01d","serviceProvider":"Cloudflare Pages","expectedOutput":"nanomunch.com loads with HTTPS padlock \u2014 Grade A SSL","actualOutput":null,"revenue":0,"leads":0,"notes":"ROOT CAUSE: SSL-for-SaaS backend bug on existing Pages project.\nFIX: Create NEW Pages project via direct upload (bypasses git pipeline).\n\nSTEPS:\n1. Go to: dash.cloudflare.com/a6baf8ae2d5ebe77fc692f87c9041830/workers-and-pages/create/pages/upload\n2. Name project: nanomunch-v2\n3. Drag-and-drop folder containing index.html + gtm-quick-scan.html\n4. Click Deploy\n5. Go to: nanomunch-v2 \u2192 Custom Domains \u2192 Add domain \u2192 nanomunch.com\n6. Update DNS: CNAME nanomunch.com \u2192 nanomunch-v2.pages.dev (proxied/orange)\n7. Wait 15 min \u2192 test at ssllabs.com/ssltest\nDO NOT use Netlify \u2014 credit-based limits make it unsuitable for commercial multi-site use.","completedDate":null,"nextAction":"Complete step 1 above RIGHT NOW \u2014 takes 10 min"},{"id":"NM-00","track":"NanoMunch","level":"MAIN","task":"Create NanoMunch DETAILED Business Plan","status":"Not Started","pct":0,"priority":"Critical","startDate":"2026-05-13","dueDate":"2026-05-13","estMin":60,"actMin":null,"dependsOn":null,"unlocks":null,"serviceProvider":null,"expectedOutput":null,"actualOutput":null,"revenue":0,"leads":0,"notes":null,"completedDate":null,"nextAction":null},{"id":"NM-02a","track":"SSL Fix","level":"sub","task":"\u21b3 Create new Cloudflare Pages project (direct upload)","status":"Not Started","pct":0,"priority":"Critical","startDate":"2026-05-13","dueDate":"2026-05-13","estMin":10,"actMin":null,"dependsOn":"NM-01","unlocks":"NM-02b","serviceProvider":"Cloudflare Pages","expectedOutput":"New project nanomunch-v2 created","actualOutput":null,"revenue":0,"leads":0,"notes":"Direct URL: dash.cloudflare.com/a6baf8ae2d5ebe77fc692f87c9041830/workers-and-pages/create/pages/upload\nChoose 'Upload assets' NOT 'Connect to Git'","completedDate":null,"nextAction":"Open that URL now"},{"id":"NM-02b","track":"SSL Fix","level":"sub","task":"\u21b3 Upload both HTML files to new project","status":"Not Started","pct":0,"priority":"Critical","startDate":"2026-05-13","dueDate":"2026-05-13","estMin":5,"actMin":null,"dependsOn":"NM-02a","unlocks":"NM-02c","serviceProvider":"Cloudflare Pages","expectedOutput":"Both files visible in Pages dashboard","actualOutput":null,"revenue":0,"leads":0,"notes":"Files needed in upload folder:\n  \u2192 index.html (main site)\n  \u2192 gtm-quick-scan.html (GTM tool)\nDrag the FOLDER (not individual files) into the upload zone","completedDate":null,"nextAction":"Have both files ready in one folder before starting"},{"id":"NM-02c","track":"SSL Fix","level":"sub","task":"\u21b3 Add nanomunch.com as custom domain","status":"Not Started","pct":0,"priority":"Critical","startDate":"2026-05-13","dueDate":"2026-05-13","estMin":10,"actMin":null,"dependsOn":"NM-02b","unlocks":"NM-02d","serviceProvider":"Cloudflare Pages","expectedOutput":"nanomunch.com shows as custom domain in Pages project","actualOutput":null,"revenue":0,"leads":0,"notes":"In Cloudflare Dashboard:\nWorkers & Pages \u2192 nanomunch-v2 \u2192 Custom Domains \u2192 Add custom domain\nType: nanomunch.com \u2192 Continue\nCloudflare auto-creates CNAME record if domain is in same account","completedDate":null,"nextAction":"Add both nanomunch.com AND www.nanomunch.com"},{"id":"NM-02d","track":"SSL Fix","level":"sub","task":"\u21b3 Update DNS CNAME to new project","status":"Not Started","pct":0,"priority":"Critical","startDate":"2026-05-13","dueDate":"2026-05-13","estMin":5,"actMin":null,"dependsOn":"NM-02c","unlocks":"NM-02e","serviceProvider":"Cloudflare DNS","expectedOutput":"CNAME nanomunch.com \u2192 nanomunch-v2.pages.dev (orange cloud)","actualOutput":null,"revenue":0,"leads":0,"notes":"DNS \u2192 Edit existing CNAME record:\nName: nanomunch.com (or @)\nTarget: nanomunch-v2.pages.dev\nProxy: ENABLED (orange cloud)\nTTL: Auto","completedDate":null,"nextAction":"Delete old CNAME pointing to broken project first"},{"id":"NM-02e","track":"SSL Fix","level":"sub","task":"\u21b3 Verify HTTPS live + test both pages","status":"Not Started","pct":0,"priority":"Critical","startDate":"2026-05-13","dueDate":"2026-05-14","estMin":10,"actMin":null,"dependsOn":"NM-02d","unlocks":"NM-03,NM-04,NM-05,LI-02b","serviceProvider":"ssllabs.com","expectedOutput":"Grade A SSL. Both URLs load correctly.","actualOutput":null,"revenue":0,"leads":0,"notes":"Test URLs:\n1. https://nanomunch.com \u2192 main landing page\n2. https://nanomunch.com/gtm-quick-scan.html \u2192 GTM tool\nSSL check: ssllabs.com/ssltest \u2192 enter nanomunch.com \u2192 should show A or A+\nIf still failing after 30min: delete nanomunch-v2 project and repeat from NM-02a with name nanomunch-v3","completedDate":null,"nextAction":"Screenshot the A rating \u2014 use as credibility proof"},{"id":"NM-03","track":"Logo & Brand","level":"MAIN","task":"Create NanoMunch logo + full brand asset set","status":"Not Started","pct":0,"priority":"Critical","startDate":"2026-05-13","dueDate":"2026-05-14","estMin":60,"actMin":null,"dependsOn":null,"unlocks":"NM-03d,LI-02,UW-01,OUT-01","serviceProvider":"Claude + favicon.io","expectedOutput":"SVG logo, favicon.ico, HTML email signature, LinkedIn banner","actualOutput":null,"revenue":0,"leads":0,"notes":"NO LOGO = NO TRUST. A stranger receiving a link with no brand mark will not proceed.\nDelivery set:\n1. SVG wordmark \u2014 Syne font, Navy #1A1A2E + Gold #C9A84C, geometric N mark\n2. favicon.ico \u2014 32x32px version\n3. HTML email signature \u2014 navy/gold, all links\n4. LinkedIn banner \u2014 1584x396px\n5. Upwork header image","completedDate":null,"nextAction":"Ask Claude: build SVG wordmark logo now"},{"id":"NM-03a","track":"Logo & Brand","level":"sub","task":"\u21b3 Generate SVG wordmark logo","status":"Not Started","pct":0,"priority":"Critical","startDate":"2026-05-13","dueDate":"2026-05-13","estMin":20,"actMin":null,"dependsOn":"NM-02a","unlocks":"NM-03b","serviceProvider":"Claude (this session)","expectedOutput":"nanomunch-logo.svg ready to download","actualOutput":null,"revenue":0,"leads":0,"notes":"Prompt to Claude: 'Build a professional SVG wordmark logo for NanoMunch. Syne font. Navy #1A1A2E for Nano, Gold #C9A84C for Munch. Include a minimal geometric mark \u2014 an N shape formed by two diagonal lines suggesting a growth chart arrow. Must work at 32px (favicon) and 400px (header). White background version AND transparent version.'","completedDate":null,"nextAction":"Say 'build the logo' to Claude right now"},{"id":"NM-03b","track":"Logo & Brand","level":"sub","task":"\u21b3 Create favicon from SVG","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-13","dueDate":"2026-05-13","estMin":5,"actMin":null,"dependsOn":"NM-03a","unlocks":"NM-03c","serviceProvider":"favicon.io","expectedOutput":"favicon.ico downloaded","actualOutput":null,"revenue":0,"leads":0,"notes":"1. Go to favicon.io/favicon-converter\n2. Upload the SVG logo\n3. Download the .ico package\n4. Add <link rel='icon' href='/favicon.ico'> to <head> of both HTML files","completedDate":null,"nextAction":"Takes 3 minutes \u2014 do immediately after logo SVG is ready"},{"id":"NM-03c","track":"Logo & Brand","level":"sub","task":"\u21b3 Build HTML email signature","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-13","dueDate":"2026-05-14","estMin":20,"actMin":null,"dependsOn":"NM-03a","unlocks":"LI-01,UW-01","serviceProvider":"Claude (this session)","expectedOutput":"Email signature HTML file ready to paste into Gmail/Outlook","actualOutput":null,"revenue":0,"leads":0,"notes":"Signature must contain:\n- NanoMunch logo (inline base64 or hosted URL)\n- Name: Phethile (Pey) Nkosi\n- Title: Fractional CMO & AI Growth Strategist | Founder, NanoMunch\n- Email: peynkosi@gmail.com\n- LinkedIn: linkedin.com/in/pnkosi\n- Upwork: upwork.com/freelancers/~01f0f8ed35e9733954\n- Web: nanomunch.com\n- Colours: Navy background strip, Gold accent, white text\nTo install in Gmail: Settings \u2192 See all settings \u2192 Signature \u2192 Create new \u2192 paste HTML","completedDate":null,"nextAction":"Ask Claude to build the HTML signature"},{"id":"NM-03d","track":"Logo & Brand","level":"sub","task":"\u21b3 Add logo + favicon to both deployed HTML files","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-14","dueDate":"2026-05-14","estMin":10,"actMin":null,"dependsOn":"NM-02e,NM-03b","unlocks":"NM-05","serviceProvider":"Cloudflare Pages","expectedOutput":"Both pages show logo in nav + browser tab shows favicon","actualOutput":null,"revenue":0,"leads":0,"notes":"1. Add favicon <link> tag to <head> of index.html and gtm-quick-scan.html\n2. Add logo <img> tag to nav in index.html\n3. Re-upload both files to nanomunch-v2 Pages project\n4. Hard-refresh browser to confirm (Ctrl+Shift+R)","completedDate":null,"nextAction":"Redeploy after favicon added"},{"id":"NM-04","track":"GTM Tools","level":"MAIN","task":"Wire Kit email capture to GTM Quick Scan","status":"Not Started","pct":0,"priority":"Critical","startDate":"2026-05-13","dueDate":"2026-05-13","estMin":25,"actMin":null,"dependsOn":"NM-02e","unlocks":"NM-04b","serviceProvider":"Kit (ConvertKit)","expectedOutput":"Real emails captured in Kit dashboard on form submission","actualOutput":null,"revenue":0,"leads":0,"notes":"Kit form endpoint confirmed: https://app.kit.com/forms/9424858/subscriptions\nMethod: POST with field email\nTest: submit a test email \u2192 check Kit dashboard \u2192 confirm subscriber appears","completedDate":null,"nextAction":"Send Kit form URL to Claude \u2192 get updated gtm-quick-scan.html"},{"id":"NM-04a","track":"GTM Tools","level":"sub","task":"\u21b3 Get Kit form embed code / API endpoint","status":"Completed","pct":100,"priority":"Critical","startDate":"2026-05-13","dueDate":"2026-05-13","estMin":10,"actMin":null,"dependsOn":null,"unlocks":"NM-04b","serviceProvider":"Kit","expectedOutput":"Endpoint URL confirmed: https://app.kit.com/forms/9424858/subscriptions","actualOutput":null,"revenue":0,"leads":0,"notes":"Kit dashboard \u2192 Forms \u2192 Select form \u2192 Publish \u2192 HTML tab \u2192 copy action URL\nConfirmed endpoint: https://app.kit.com/forms/9424858/subscriptions","completedDate":null,"nextAction":"Done \u2014 endpoint confirmed"},{"id":"NM-04b","track":"GTM Tools","level":"sub","task":"\u21b3 Rebuild gtm-quick-scan.html with real Kit integration","status":"Not Started","pct":0,"priority":"Critical","startDate":"2026-05-13","dueDate":"2026-05-13","estMin":45,"actMin":null,"dependsOn":"NM-04a","unlocks":"NM-04c","serviceProvider":"Claude (this session)","expectedOutput":"Updated gtm-quick-scan.html with fetch POST to Kit + 7 Sugarman-copy questions","actualOutput":null,"revenue":0,"leads":0,"notes":"Claude builds: 7-question GTM assessment, Sugarman/Ogilvy copy, score 0-100, green/amber/red diagnosis, email gate before results, Kit POST submission, buyer intent tags.\nKit endpoint: https://app.kit.com/forms/9424858/subscriptions\nField name: email_address","completedDate":null,"nextAction":"This is the next build task for Claude"},{"id":"NM-04c","track":"GTM Tools","level":"sub","task":"\u21b3 Write Kit Email 1 \u2014 welcome + value (no pitch)","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-13","dueDate":"2026-05-14","estMin":30,"actMin":null,"dependsOn":"NM-04b","unlocks":"NM-04d","serviceProvider":"Kit + Claude","expectedOutput":"Email 1 live in Kit automation sequence","actualOutput":null,"revenue":0,"leads":0,"notes":"Rules:\n- Subject line: \u22648 words, curiosity-driven, not salesy\n- No pitch in Email 1 \u2014 pure value delivery\n- Lead with their GTM score and what it means\n- 1 specific actionable insight they can use today\n- Close: 'Reply if you want the full framework'\nSugarman trigger: specificity + curiosity","completedDate":null,"nextAction":"Ask Claude to draft using Sugarman triggers"},{"id":"NM-04d","track":"GTM Tools","level":"sub","task":"\u21b3 Test full email capture flow end-to-end","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-14","dueDate":"2026-05-14","estMin":15,"actMin":null,"dependsOn":"NM-04b,NM-04c","unlocks":"NM-06","serviceProvider":"Kit + Browser","expectedOutput":"Test email appears in Kit \u2192 Email 1 received in inbox","actualOutput":null,"revenue":0,"leads":0,"notes":"1. Open nanomunch.com/gtm-quick-scan.html\n2. Complete all 7 questions\n3. Submit real email address\n4. Confirm: subscriber appears in Kit dashboard\n5. Confirm: Email 1 arrives in inbox within 5 minutes\n6. Check spam score \u2014 if landing in spam, fix Kit sender authentication","completedDate":null,"nextAction":"Use a personal email for testing, not peynkosi@gmail.com"},{"id":"NM-05","track":"Analytics","level":"MAIN","task":"Install GA4 + Google Search Console + robots.txt","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-14","dueDate":"2026-05-14","estMin":25,"actMin":null,"dependsOn":"NM-02e","unlocks":"NM-05c","serviceProvider":"Google Analytics + GSC","expectedOutput":"GA4 tracking live. GSC property verified. Sitemap submitted.","actualOutput":null,"revenue":0,"leads":0,"notes":"Cannot optimise what you cannot measure. Every day without analytics = blind operation.","completedDate":null,"nextAction":"Do immediately after SSL confirmed"},{"id":"NM-05a","track":"Analytics","level":"sub","task":"\u21b3 Create GA4 property + get Measurement ID","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-14","dueDate":"2026-05-14","estMin":10,"actMin":null,"dependsOn":"NM-02e","unlocks":"NM-05b","serviceProvider":"analytics.google.com","expectedOutput":"Measurement ID: G-XXXXXXXXXX","actualOutput":null,"revenue":0,"leads":0,"notes":"1. analytics.google.com \u2192 Admin \u2192 Create Property\n2. Property name: NanoMunch\n3. Time zone: South Africa (SAST)\n4. Currency: USD (global revenue)\n5. Copy Measurement ID (G-XXXXXXXXXX)\n6. Paste gtag.js snippet into <head> of both HTML files","completedDate":null,"nextAction":"Record Measurement ID in this tracker once obtained"},{"id":"NM-05b","track":"Analytics","level":"sub","task":"\u21b3 Submit sitemap + verify GSC ownership","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-14","dueDate":"2026-05-14","estMin":10,"actMin":null,"dependsOn":"NM-05a","unlocks":"NM-05c","serviceProvider":"search.google.com/search-console","expectedOutput":"Property verified. Sitemap submitted.","actualOutput":null,"revenue":0,"leads":0,"notes":"1. search.google.com/search-console \u2192 Add property \u2192 URL prefix \u2192 nanomunch.com\n2. Verify via Cloudflare DNS TXT record (Cloudflare makes this automatic)\n3. Go to Sitemaps \u2192 Add sitemap \u2192 nanomunch.com/sitemap.xml\n4. Create sitemap.xml listing all pages and upload to Pages project","completedDate":null,"nextAction":"Basic sitemap.xml content: <?xml version='1.0'?><urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'><url><loc>https://nanomunch.com/</loc></url><url><loc>https://nanomunch.com/gtm-quick-scan.html</loc></url></urlset>"},{"id":"NM-05c","track":"Analytics","level":"sub","task":"\u21b3 Add robots.txt and request indexing for all pages","status":"Not Started","pct":0,"priority":"Medium","startDate":"2026-05-14","dueDate":"2026-05-14","estMin":5,"actMin":null,"dependsOn":"NM-05b","unlocks":null,"serviceProvider":"GSC + Cloudflare Pages","expectedOutput":"robots.txt live. All pages indexed.","actualOutput":null,"revenue":0,"leads":0,"notes":"robots.txt content (save as robots.txt, upload to Pages):\nUser-agent: *\nAllow: /\nSitemap: https://nanomunch.com/sitemap.xml\n\nIn GSC: URL Inspection \u2192 enter each page URL \u2192 Request Indexing","completedDate":null,"nextAction":"Takes 5 minutes \u2014 do same session as GA4"},{"id":"NM-06","track":"GTM Tools","level":"MAIN","task":"Build full 3-tool GTM Funnel (buyer intent scoring)","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-15","dueDate":"2026-05-18","estMin":240,"actMin":null,"dependsOn":"NM-02e,NM-04d","unlocks":"OUT-01","serviceProvider":"Claude + Cloudflare Pages","expectedOutput":"Three connected tools live on nanomunch.com with intent scoring","actualOutput":null,"revenue":0,"leads":0,"notes":"ARCHITECTURE:\nTool A (LTV:CAC) \u2192 amber/red result \u2192 routes to Tool B\nTool B (GTM Readiness Score \u2014 7 questions, score 0-100) \u2192 score <70 \u2192 routes to Tool C\nTool C (Service Matcher \u2014 budget, timeline, urgency) \u2192 auto-proposal email\n\nBACK-END SCORING:\n+10 Tool A completed\n+15 Email captured\n+25 Tool B completed\n+20 Company name given\n+40 Tool C completed\n+30 Budget confirmed\nScore \u226580 = personal outreach from Pey within 24hrs","completedDate":null,"nextAction":"This is the primary consulting lead generation machine"},{"id":"LI-01","track":"LinkedIn","level":"MAIN","task":"LinkedIn profile overhaul \u2014 Phase 1 (no URL yet)","status":"In Progress","pct":50,"priority":"High","startDate":"2026-05-14","dueDate":"2026-05-14","estMin":35,"actMin":null,"dependsOn":"NM-03","unlocks":"LI-02","serviceProvider":"LinkedIn","expectedOutput":"Updated headline, current role NanoMunch, Social Media Strategist ended","actualOutput":null,"revenue":0,"leads":0,"notes":"DO NOW \u2014 does not require SSL to be fixed first.\nUpdate: headline + current position + end old role + reorder skills","completedDate":null,"nextAction":"Complete today while SSL fix runs in background"},{"id":"LI-01a","track":"LinkedIn","level":"sub","task":"\u21b3 Paste finalised headline (220 char limit)","status":"In Progress","pct":50,"priority":"High","startDate":"2026-05-14","dueDate":"2026-05-14","estMin":5,"actMin":null,"dependsOn":null,"unlocks":"LI-01b","serviceProvider":"LinkedIn","expectedOutput":"Headline live and indexed","actualOutput":null,"revenue":0,"leads":0,"notes":"HEADLINE TO PASTE:\nFractional CMO & AI Growth Strategist | Helping B2B SaaS Founders Build Revenue Systems | SaaS Tool Builder | NanoMunch Founder | 20+ Yrs Operator\n\nPath: linkedin.com/in/pnkosi \u2192 Edit intro \u2192 Headline field\nCurrent count: 152/220 chars \u2705","completedDate":null,"nextAction":"Confirm headline is showing on profile after save"},{"id":"LI-01b","track":"LinkedIn","level":"sub","task":"\u21b3 Set NanoMunch as current position","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-14","dueDate":"2026-05-14","estMin":5,"actMin":null,"dependsOn":"LI-01a","unlocks":"LI-01c","serviceProvider":"LinkedIn","expectedOutput":"NanoMunch shows as current role in intro","actualOutput":null,"revenue":0,"leads":0,"notes":"Edit intro \u2192 Current position \u2192 Add new position:\n- Title: Founder & Chief Product Strategist\n- Company: NanoMunch\n- Employment type: Self-employed\n- Start: November 2020\n- Currently working: YES\n- End current position (Social Media Strategist): YES\n- Location: Johannesburg (Remote)\n- Industry: Technology, Information and Internet","completedDate":null,"nextAction":"Check 'Show current company in my intro' is ticked"},{"id":"LI-01c","track":"LinkedIn","level":"sub","task":"\u21b3 End-date Social Media Strategist role","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-14","dueDate":"2026-05-14","estMin":3,"actMin":null,"dependsOn":"LI-01b","unlocks":"LI-01d","serviceProvider":"LinkedIn","expectedOutput":"Social Media Strategist no longer shows as current","actualOutput":null,"revenue":0,"leads":0,"notes":"Experience \u2192 Social Media Strategist \u2192 Edit \u2192 Set end date to last date held\nThis removes conflicting 'current role' signal that undermines Fractional CMO positioning","completedDate":null,"nextAction":"If unsure of end date, use the month you started NanoMunch: Nov 2020"},{"id":"LI-01d","track":"LinkedIn","level":"sub","task":"\u21b3 Reorder top 5 skills for search ranking","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-14","dueDate":"2026-05-14","estMin":5,"actMin":null,"dependsOn":"LI-01c","unlocks":"LI-02","serviceProvider":"LinkedIn","expectedOutput":"Top 5 skills in correct order","actualOutput":null,"revenue":0,"leads":0,"notes":"Skills section \u2192 Reorder:\n1. Go-to-Market Strategy\n2. Fractional CMO Services\n3. AI-Powered Marketing Systems\n4. B2B SaaS Growth\n5. CPA & Performance Marketing\n\nThen message 5 connections specifically asking to endorse for 'Go-to-Market Strategy'","completedDate":null,"nextAction":"Specific endorsement requests get 80% more responses than generic asks"},{"id":"LI-02","track":"LinkedIn","level":"MAIN","task":"LinkedIn \u2014 Phase 2 (requires SSL + logo)","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-15","dueDate":"2026-05-15","estMin":45,"actMin":null,"dependsOn":"NM-02e,NM-03a","unlocks":"LI-03","serviceProvider":"LinkedIn","expectedOutput":"About section, Featured section, Creator Mode, banner all live","actualOutput":null,"revenue":0,"leads":0,"notes":"ONLY start this after nanomunch.com SSL is confirmed live.\nAdding dead URLs destroys credibility.","completedDate":null,"nextAction":"Block this until NM-02e shows Completed"},{"id":"LI-02a","track":"LinkedIn","level":"sub","task":"\u21b3 Paste About section copy","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-15","dueDate":"2026-05-15","estMin":10,"actMin":null,"dependsOn":"NM-02e","unlocks":"LI-02b","serviceProvider":"LinkedIn","expectedOutput":"Full 2,600 char About section live","actualOutput":null,"revenue":0,"leads":0,"notes":"HOOK (first 265 chars \u2014 shows before 'see more'):\n'Most SaaS founders don't have a marketing problem. They have a systems problem. Strategy without infrastructure is just expensive guesswork. I fix that.'\n\nThen: credibility + services + currently building + CTA\nFull copy available \u2014 ask Claude for complete About text","completedDate":null,"nextAction":"The first 2 lines are everything \u2014 Sugarman's slippery slide starts here"},{"id":"LI-02b","track":"LinkedIn","level":"sub","task":"\u21b3 Add Featured: NanoMunch link + GTM scan link","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-15","dueDate":"2026-05-15","estMin":5,"actMin":null,"dependsOn":"NM-02e,LI-02a","unlocks":"LI-02c","serviceProvider":"LinkedIn","expectedOutput":"Two featured items visible below About section","actualOutput":null,"revenue":0,"leads":0,"notes":"Featured \u2192 Add link:\n1. https://nanomunch.com \u2014 title: NanoMunch: AI-Powered Revenue Systems\n2. https://nanomunch.com/gtm-quick-scan.html \u2014 title: Free GTM Readiness Score (60 seconds)","completedDate":null,"nextAction":"A dead link in Featured section = immediate credibility collapse"},{"id":"LI-02c","track":"LinkedIn","level":"sub","task":"\u21b3 Turn on Creator Mode + 5 hashtags + upload banner","status":"Not Started","pct":0,"priority":"Medium","startDate":"2026-05-15","dueDate":"2026-05-15","estMin":10,"actMin":null,"dependsOn":"LI-02b","unlocks":"LI-03","serviceProvider":"LinkedIn","expectedOutput":"Creator Mode on, hashtags set, banner uploaded","actualOutput":null,"revenue":0,"leads":0,"notes":"Creator Mode: Profile \u2192 Resources \u2192 Creator mode \u2192 Turn on\nHashtags: #FractionalCMO #SaaSGrowth #AIMarketing #GTMStrategy #B2BSaaS\nBanner: 1584x396px \u2014 navy background, gold text, positioning statement\nAsk Claude to generate banner text content","completedDate":null,"nextAction":"Creator mode changes Follow button to primary \u2014 increases reach"},{"id":"LI-03","track":"LinkedIn","level":"MAIN","task":"Publish LinkedIn Post 1 \u2014 TODAY","status":"Not Started","pct":0,"priority":"Critical","startDate":"2026-05-14","dueDate":"2026-05-14","estMin":20,"actMin":null,"dependsOn":"LI-01","unlocks":"LI-03c","serviceProvider":"LinkedIn","expectedOutput":"Post live, GTM scan link in first comment, replies to all comments within 90min","actualOutput":null,"revenue":0,"leads":0,"notes":"DO NOT wait for SSL. The GTM Quick Scan URL already works.\nPost the 35% CPA hook post NOW.\nOgilvy rule: the headline (first line) must stop the scroll.","completedDate":null,"nextAction":"This generates leads TODAY while everything else is being built"},{"id":"LI-03a","track":"LinkedIn","level":"sub","task":"\u21b3 Copy + paste Post 1 text","status":"Not Started","pct":0,"priority":"Critical","startDate":"2026-05-14","dueDate":"2026-05-14","estMin":5,"actMin":null,"dependsOn":"LI-01","unlocks":"LI-03b","serviceProvider":"LinkedIn","expectedOutput":"Post live","actualOutput":null,"revenue":0,"leads":0,"notes":"FIRST LINE (Ogilvy/Sugarman hook \u2014 8 words max):\n'I achieved a 35% CPA conversion rate.'\n\nDo NOT put external link in the post body \u2014 LinkedIn algorithm suppresses posts with early external links.\nPut the tool URL in the FIRST COMMENT after posting.","completedDate":null,"nextAction":"Post between 8-10am or 12-1pm local time for peak reach"},{"id":"LI-03b","track":"LinkedIn","level":"sub","task":"\u21b3 Add GTM scan URL in first comment immediately","status":"Not Started","pct":0,"priority":"Critical","startDate":"2026-05-14","dueDate":"2026-05-14","estMin":3,"actMin":null,"dependsOn":"LI-03a","unlocks":"LI-03c","serviceProvider":"LinkedIn","expectedOutput":"Tool URL live in first comment","actualOutput":null,"revenue":0,"leads":0,"notes":"Comment text:\n'Here's the system I used \u2014 and the free GTM calculator that tells you if yours is working:\nhttps://nanomunch.com/gtm-quick-scan.html\n\nTakes 60 seconds. Tells you exactly what to fix first.'","completedDate":null,"nextAction":"Post this comment within 60 seconds of publishing \u2014 before algorithm scores the post"},{"id":"LI-03c","track":"LinkedIn","level":"sub","task":"\u21b3 Reply to every comment within 90 minutes","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-14","dueDate":"2026-05-14","estMin":15,"actMin":null,"dependsOn":"LI-03b","unlocks":"CON-01","serviceProvider":"LinkedIn","expectedOutput":"All comments replied to \u2014 extended reach triggered","actualOutput":null,"revenue":0,"leads":0,"notes":"2026 algorithm: comments carry 15x more weight than likes\nEvery reply extends the comment thread = algorithm pushes post to more feeds\nSpecific question to end every reply: drives more comments\nSet a 90-minute alarm after posting","completedDate":null,"nextAction":"Stay near your phone for 90 min after posting"},{"id":"UW-01","track":"Upwork","level":"MAIN","task":"Upwork profile complete overhaul","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-15","dueDate":"2026-05-15","estMin":120,"actMin":null,"dependsOn":"NM-03a","unlocks":"UW-01e","serviceProvider":"Upwork","expectedOutput":"Profile at $150/hr, Fractional CMO title, 35% CPA in overview line 1, portfolio items uploaded","actualOutput":null,"revenue":0,"leads":0,"notes":"Every day without updated profile = missed inbound enquiries.\nRate: $150/hr to start. Raise to $200/hr after 3 five-star reviews.","completedDate":null,"nextAction":"Do in parallel with LinkedIn Phase 2 \u2014 same session"},{"id":"UW-01a","track":"Upwork","level":"sub","task":"\u21b3 Update title","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-15","dueDate":"2026-05-15","estMin":3,"actMin":null,"dependsOn":null,"unlocks":"UW-01b","serviceProvider":"Upwork","expectedOutput":"New title live","actualOutput":null,"revenue":0,"leads":0,"notes":"TITLE TO USE:\nFractional CMO | AI Growth Systems for B2B SaaS & SMEs | GTM Strategy | 20+ Yrs Operator\n\nUpwork search algorithm weights profile title heavily \u2014 every keyword is a ranking signal","completedDate":null,"nextAction":"Title change takes effect within 24 hours for search ranking"},{"id":"UW-01b","track":"Upwork","level":"sub","task":"\u21b3 Rewrite overview \u2014 Sugarman first sentence rule","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-15","dueDate":"2026-05-15","estMin":20,"actMin":null,"dependsOn":"UW-01a","unlocks":"UW-01c","serviceProvider":"Upwork + Claude","expectedOutput":"New overview live \u2014 35% CPA in first 2 lines","actualOutput":null,"revenue":0,"leads":0,"notes":"FIRST 2 LINES (what Upwork shows before 'See more'):\n'I achieved a 35% CPA conversion rate in under 90 days \u2014 7 to 17x above the industry benchmark of 2-5%. Now I build the AI-powered systems that make that repeatable for SaaS founders and SME operators globally.'\n\nSugarman rule: first sentence must be so compelling it forces the second sentence to be read.","completedDate":null,"nextAction":"Ask Claude for complete overview copy using Sugarman triggers"},{"id":"UW-01c","track":"Upwork","level":"sub","task":"\u21b3 Set hourly rate to $150","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-15","dueDate":"2026-05-15","estMin":2,"actMin":null,"dependsOn":"UW-01b","unlocks":"UW-01d","serviceProvider":"Upwork","expectedOutput":"Rate shows $150/hr on profile","actualOutput":null,"revenue":0,"leads":0,"notes":"Profile \u2192 Edit \u2192 Hourly rate \u2192 $150.00\nNote: Upwork takes 20% on first $500 with each client (reduces to 10% then 5%)\nEffective rate on first contract: ~$120/hr net","completedDate":null,"nextAction":"Price signals quality \u2014 $150 is entry point for senior positioning"},{"id":"UW-01d","track":"Upwork","level":"sub","task":"\u21b3 Upload portfolio: 3 items minimum","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-15","dueDate":"2026-05-15","estMin":15,"actMin":null,"dependsOn":"NM-02e,UW-01c","unlocks":"UW-01e","serviceProvider":"Upwork","expectedOutput":"3 portfolio items visible with screenshots","actualOutput":null,"revenue":0,"leads":0,"notes":"Portfolio items to add:\n1. NanoMunch LTV:CAC Calculator \u2014 screenshot + URL: nanomunch.com\n2. GTM Quick Scan \u2014 screenshot + URL: nanomunch.com/gtm-quick-scan.html\n3. BDS Revenue Growth Case Study \u2014 anonymised PDF showing 5\u21926 figures in 7 months\n\nProfiles with portfolio items get 40-60% more invitations","completedDate":null,"nextAction":"Screenshots must show the tool working \u2014 not just the homepage"},{"id":"UW-01e","track":"Upwork","level":"sub","task":"\u21b3 Send 5 personalised proposals Day 1","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-15","dueDate":"2026-05-15","estMin":60,"actMin":null,"dependsOn":"UW-01d","unlocks":"CON-01","serviceProvider":"Upwork","expectedOutput":"5 proposals sent with LTV:CAC result as proof-of-skill attachment","actualOutput":null,"revenue":0,"leads":0,"notes":"Target jobs: Fractional CMO, GTM Strategy, SaaS Marketing, Growth Strategy\nProposal structure (Sugarman):\n1. First sentence = their specific problem (shows you read the brief)\n2. Your specific relevant result (35% CPA, 7 months 5\u21926 figures)\n3. One specific thing you would do for them in week 1\n4. CTA: 'I've built a free GTM diagnostic tool \u2014 here's what it says about your situation: [custom insight]'\nAttach: LTV:CAC calculator screenshot as proof of building capability","completedDate":null,"nextAction":"Personalised proposals convert at 5-8x generic templates"},{"id":"CON-01","track":"Consulting","level":"MAIN","task":"LinkedIn direct outreach \u2014 5 messages per day","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-14","dueDate":"2026-05-14","estMin":30,"actMin":null,"dependsOn":"LI-01","unlocks":"CON-01b","serviceProvider":"LinkedIn","expectedOutput":"5 messages sent. 1-2 replies expected per 5 sent.","actualOutput":null,"revenue":0,"leads":0,"notes":"Target: SaaS founders, CMOs, CEOs \u2014 US/UK/EU/AU \u2014 company size 10-500 \u2014 Series A-B\nLinkedIn search filters: Industry=Software, Title=Founder OR CEO OR CMO, Connections=2nd\nOffer: free 30-min GTM audit \u2014 no pitch, no deck, just value","completedDate":null,"nextAction":"One converted connection = $300-500 Power Hour = first income"},{"id":"CON-01a","track":"Consulting","level":"sub","task":"\u21b3 Identify 5 prospects using LinkedIn search","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-14","dueDate":"2026-05-14","estMin":15,"actMin":null,"dependsOn":"LI-01","unlocks":"CON-01b","serviceProvider":"LinkedIn Sales Nav (free)","expectedOutput":"5 qualified prospects identified with company context noted","actualOutput":null,"revenue":0,"leads":0,"notes":"Search filters:\n- Title: Founder OR CEO OR CMO OR 'Head of Growth'\n- Industry: Software Development OR Technology\n- Company size: 11-500 employees\n- Geography: US, UK, CA, AU, Germany, Netherlands\n- Connection: 2nd degree (warm intro possible)\n\nNote for each: company name, current GTM challenge (read their recent posts), mutual connections","completedDate":null,"nextAction":"Quality over quantity \u2014 5 well-researched > 20 cold"},{"id":"CON-01b","track":"Consulting","level":"sub","task":"\u21b3 Send personalised connection + message","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-14","dueDate":"2026-05-14","estMin":15,"actMin":null,"dependsOn":"CON-01a","unlocks":"CON-01c","serviceProvider":"LinkedIn","expectedOutput":"5 messages sent","actualOutput":null,"revenue":0,"leads":0,"notes":"MESSAGE TEMPLATE (Ogilvy: lead with THEIR problem, not your credentials):\n'Hi [Name] \u2014 I noticed [specific thing about their recent post/company stage]. I've been building GTM systems for SaaS founders at this stage and have a free diagnostic that shows exactly where the biggest growth leak is. Worth 30 minutes this week?'\n\nDO NOT: pitch services, list credentials, use 'I' in the first sentence","completedDate":null,"nextAction":"Track responses in this tracker \u2014 update status per prospect"},{"id":"CON-01c","track":"Consulting","level":"sub","task":"\u21b3 Follow up on non-replies at Day 5","status":"Not Started","pct":0,"priority":"Medium","startDate":"2026-05-19","dueDate":"2026-05-19","estMin":10,"actMin":null,"dependsOn":"CON-01b","unlocks":null,"serviceProvider":"LinkedIn","expectedOutput":"Follow-up sent to non-responders","actualOutput":null,"revenue":0,"leads":0,"notes":"Most deals close on 3rd-4th contact. Non-reply \u2260 no interest.\nFollow-up: 'Hi [Name] \u2014 wanted to share one data point from the GTM tool I built: [relevant stat for their industry]. Happy to send the full analysis for your company if useful.'\nAttach GTM Quick Scan result screenshot","completedDate":null,"nextAction":"Set calendar reminder for Day 5 per prospect"},{"id":"CPA-01","track":"CPA Marketing","level":"MAIN","task":"Join CPA networks + activate first offers","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-14","dueDate":"2026-05-15","estMin":90,"actMin":null,"dependsOn":"NM-02e","unlocks":"CPA-01d","serviceProvider":"MaxBounty + PerformCB","expectedOutput":"Active in 2 networks. First offer embedded in tool result page.","actualOutput":null,"revenue":0,"leads":0,"notes":"CPA = earn fixed fee per completed user action (form fill, trial signup, loan app)\nBest verticals for our tools: Finance ($20-500/lead), Insurance ($25-150/lead), Legal ($100-500/lead), SaaS trials ($5-50)\neCPA formula: payout \u00d7 conversion rate = effective earnings per visitor","completedDate":null,"nextAction":"Apply to MaxBounty first \u2014 fastest approval, weekly payments"},{"id":"CPA-01a","track":"CPA Marketing","level":"sub","task":"\u21b3 Apply to MaxBounty","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-14","dueDate":"2026-05-14","estMin":20,"actMin":null,"dependsOn":null,"unlocks":"CPA-01b","serviceProvider":"maxbounty.com","expectedOutput":"MaxBounty account approved. Dashboard accessible.","actualOutput":null,"revenue":0,"leads":0,"notes":"1. maxbounty.com \u2192 Sign Up as Affiliate\n2. Application: be specific about traffic source (SEO + interactive tools)\n3. Website: nanomunch.com\n4. Traffic: organic search + tool completions\n5. Expected volume: 100-500 leads/month initially\nApproval: usually 24-48 hours. They may call to verify.","completedDate":null,"nextAction":"Be honest about traffic volume \u2014 they verify"},{"id":"CPA-01b","track":"CPA Marketing","level":"sub","task":"\u21b3 Apply to PerformCB","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-14","dueDate":"2026-05-14","estMin":15,"actMin":null,"dependsOn":null,"unlocks":"CPA-01c","serviceProvider":"performcb.com","expectedOutput":"PerformCB account approved","actualOutput":null,"revenue":0,"leads":0,"notes":"performcb.com \u2192 Join as Publisher\nFocus: premium finance and insurance offers \u2014 higher payouts than MaxBounty for these verticals","completedDate":null,"nextAction":"Apply same day as MaxBounty \u2014 different approval timeline"},{"id":"CPA-01c","track":"CPA Marketing","level":"sub","task":"\u21b3 Research top 3 offers using OfferVault","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-14","dueDate":"2026-05-15","estMin":30,"actMin":null,"dependsOn":"CPA-01a","unlocks":"CPA-01d","serviceProvider":"offervault.com","expectedOutput":"3 best offers identified with payout, conversion rate, and eCPA calculated","actualOutput":null,"revenue":0,"leads":0,"notes":"offervault.com \u2192 search Finance \u2192 filter: US, CPA, highest payout\nRecord for each offer:\n- Offer name\n- Payout per action\n- Estimated conversion rate (ask AM)\n- eCPA = payout \u00d7 conversion rate\n- Landing page quality (check their page)\nChoose offer with best eCPA, not highest payout","completedDate":null,"nextAction":"eCPA is the only metric that matters \u2014 not raw payout"},{"id":"CPA-01d","track":"CPA Marketing","level":"sub","task":"\u21b3 Embed first CPA offer in LTV:CAC result page","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-15","dueDate":"2026-05-15","estMin":30,"actMin":null,"dependsOn":"CPA-01c,NM-02e","unlocks":null,"serviceProvider":"Claude + Cloudflare Pages","expectedOutput":"CPA offer link live in tool result page. First commissions trackable.","actualOutput":null,"revenue":0,"leads":0,"notes":"Placement rules:\n- AFTER diagnosis text (Sugarman: deliver value BEFORE the ask)\n- BEFORE email capture gate\n- Label: 'Recommended resource' or 'Based on your ratio, this tool may help'\n- NEVER label as ad or sponsored (unless required by network ToS)\n\nConversion tracking: use CPA network's provided tracking pixel","completedDate":null,"nextAction":"Test the affiliate link yourself first \u2014 confirm tracking fires"},{"id":"S1-01","track":"Site 1: Finance","level":"MAIN","task":"Register Finance Hub domain","status":"Not Started","pct":0,"priority":"Medium","startDate":"2026-05-16","dueDate":"2026-05-16","estMin":15,"actMin":null,"dependsOn":null,"unlocks":"S1-02","serviceProvider":"Cloudflare Registrar","expectedOutput":"Domain registered, auto-renew enabled","actualOutput":null,"revenue":0,"leads":0,"notes":"Priority order to check:\n1. calcnation.com\n2. ratenerd.com\n3. moneykit.io\n4. figureout.io\n5. wealthcalc.com\nCheck at instantdomainsearch.com first (real-time, no account needed)\nRegister at dash.cloudflare.com \u2192 Domain Registration \u2192 Register Domains","completedDate":null,"nextAction":"Check availability at instantdomainsearch.com before registering"},{"id":"S1-02","track":"Site 1: Finance","level":"MAIN","task":"Build Finance Hub \u2014 3 tools + affiliate wiring","status":"Not Started","pct":0,"priority":"Medium","startDate":"2026-05-17","dueDate":"2026-05-20","estMin":240,"actMin":null,"dependsOn":"S1-01","unlocks":null,"serviceProvider":"Claude + Cloudflare Pages","expectedOutput":"3 calculators live. Affiliate links on all result pages. Submitted to GSC.","actualOutput":null,"revenue":0,"leads":0,"notes":"Tool priority order (by search volume):\n1. Mortgage/bond calculator \u2014 4.5M searches/mo global\n2. Compound interest calculator \u2014 1.2M searches/mo\n3. Salary after-tax calculator \u2014 800K searches/mo\n\nAffiliate programmes to join:\n- LendingTree: $50-200/lead (Impact.com)\n- Credible: $100-300/funded loan (Impact.com)\n- Acorns: $50-150/funded account (Impact.com)\n- YNAB: $6-12/trial recurring (ShareASale)","completedDate":null,"nextAction":"Each tool = 1 day build with Claude. Start with mortgage (highest search volume)"},{"id":"S2-01","track":"Site 2: Insurance","level":"MAIN","task":"Register Insurance/Legal Hub domain","status":"Not Started","pct":0,"priority":"Medium","startDate":"2026-05-18","dueDate":"2026-05-18","estMin":15,"actMin":null,"dependsOn":null,"unlocks":"S2-02","serviceProvider":"Cloudflare Registrar","expectedOutput":"Domain registered","actualOutput":null,"revenue":0,"leads":0,"notes":"Priority order:\n1. coveragekit.com\n2. claimcalc.com\n3. quotenerd.com\n4. policyiq.com\n\nNOTE: .com strongly preferred for YMYL (insurance/legal) \u2014 trust signal\nCheck instantdomainsearch.com first","completedDate":null,"nextAction":"YMYL niche requires .com \u2014 do not use .io or .net for this site"},{"id":"S2-02","track":"Site 2: Insurance","level":"MAIN","task":"Build Insurance Hub + direct lead gen partnerships","status":"Not Started","pct":0,"priority":"Medium","startDate":"2026-05-20","dueDate":"2026-05-27","estMin":360,"actMin":null,"dependsOn":"S2-01","unlocks":null,"serviceProvider":"Claude + Direct Partners","expectedOutput":"2 tools live. 3 direct partner agreements signed. First leads delivered.","actualOutput":null,"revenue":0,"leads":0,"notes":"Tools:\n1. Auto insurance quote estimator \u2014 800K searches/mo\n2. Personal injury settlement calculator \u2014 $200-500/lead to law firms\n\nLEAD GEN STRATEGY (highest value):\n- Bypass affiliate networks\n- Contact 10 law firms directly: 'Free 5 test leads \u2192 negotiate per-lead rate'\n- Personal injury law firms pay $200-500/lead directly vs $50-150 through networks\n\nYMYL REQUIREMENTS:\n- Clear author byline with credentials\n- Disclaimer: 'This tool provides estimates only \u2014 not legal or insurance advice'\n- Author schema markup\n- Sources cited for any statistics","completedDate":null,"nextAction":"Direct law firm outreach is 2-4x more profitable than affiliate networks"},{"id":"S3-01","track":"Site 3: SaaS","level":"MAIN","task":"Register SaaS/AI Comparison Hub domain","status":"Not Started","pct":0,"priority":"Medium","startDate":"2026-05-18","dueDate":"2026-05-18","estMin":15,"actMin":null,"dependsOn":null,"unlocks":"S3-02","serviceProvider":"Cloudflare Registrar","expectedOutput":"Domain registered","actualOutput":null,"revenue":0,"leads":0,"notes":"Priority order:\n1. stackmatch.com \u2014 'match' perfectly describes the recommendation engine\n2. toolstack.io \u2014 tech niche accepts .io\n3. saaspicker.com \u2014 direct intent keyword\n4. appcompare.io\nCheck instantdomainsearch.com","completedDate":null,"nextAction":"stackmatch.com is the strategic first choice"},{"id":"S3-02","track":"Site 3: SaaS","level":"MAIN","task":"Build SaaS Recommendation Engine","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-19","dueDate":"2026-05-23","estMin":300,"actMin":null,"dependsOn":"S3-01","unlocks":"OUT-01","serviceProvider":"Claude + Cloudflare Pages","expectedOutput":"Recommendation engine live. 20 tools in database. All affiliate programmes active.","actualOutput":null,"revenue":0,"leads":0,"notes":"ARCHITECTURE:\n1. JSON tool database (20 tools): name, category, price, team size fit, ease score, affiliate URL\n2. 8-question questionnaire: team size, budget, use case, integrations, tech comfort\n3. Weighted scoring algorithm: each answer adjusts match scores\n4. Results page: top 3 matches with % score + personalised explanation + affiliate CTA\n\nSEO SURFACE AREA (auto-generated):\n- Individual tool review pages\n- Category comparison pages ('best CRM for startups')\n- Head-to-head pages ('HubSpot vs Salesforce')\n\nAFFILIATE PROGRAMMES (join immediately):\n- HubSpot: 30% recurring, up to $1,000/enterprise \u2014 Impact.com\n- Semrush: $200/sale + $10/trial \u2014 direct\n- ActiveCampaign: 20-30% recurring \u2014 direct\n- Monday.com: up to $1,000/customer \u2014 Impact.com\n- Jasper: 25% recurring lifetime \u2014 direct","completedDate":null,"nextAction":"Every new tool added to database = new SEO pages auto-generated"},{"id":"OUT-01","track":"Launch","level":"MAIN","task":"Product Hunt launch \u2014 NanoMunch Tools","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-22","dueDate":"2026-05-22","estMin":60,"actMin":null,"dependsOn":"NM-02e,NM-03,NM-04d","unlocks":null,"serviceProvider":"Product Hunt","expectedOutput":"Top 10 finish on launch day. 500+ visitors. 50+ email signups.","actualOutput":null,"revenue":0,"leads":0,"notes":"Launch day: Tuesday or Wednesday (highest traffic days)\nTime: 00:01 PST (midnight Pacific) for maximum 24-hour window\n\nPREP:\n1. Create Product Hunt profile (producthunt.com/posts/new)\n2. Upload logo (NM-03a required first)\n3. Tagline (Ogilvy: lead with the transformation):\n   'The free tool that tells SaaS founders if their growth model is actually working'\n4. Description: 60-second demo, specific result, no hype\n5. First comment: link to both tools\n6. Share in: r/SaaS, r/SideProject, r/entrepreneur, r/InternetIsBeautiful\n7. Post on LinkedIn + X morning of launch\n\nDAY-OF TASKS:\n- Reply to every Product Hunt comment within 1 hour\n- Post progress updates to LinkedIn throughout day","completedDate":null,"nextAction":"Preparation must be complete by May 21 \u2014 no rushing launch day"},{"id":"CF-01","track":"NanoMunch","level":"MAIN","task":"Apply for Cloudflare for Startups ($5K free credits)","status":"Not Started","pct":0,"priority":"High","startDate":"2026-05-14","dueDate":"2026-05-14","estMin":15,"actMin":null,"dependsOn":null,"unlocks":null,"serviceProvider":"Cloudflare","expectedOutput":"$5,000 in credits approved. Applied to account.","actualOutput":null,"revenue":0,"leads":0,"notes":"1. Go to: cloudflare.com/forstartups\n2. Fill application (15 minutes)\n3. Company: NanoMunch (Pty) Ltd\n4. Stage: Pre-revenue / bootstrapped (qualifies for $5K tier)\n5. Use case: Multi-site interactive tool deployment, global CDN\n\nNOTE: Domain registration costs are EXCLUDED from credits \u2014 already paid.\nCredits cover: Workers compute, R2 storage, AI tools, advanced security features\nWorth doing even if not immediately needed \u2014 credits are banked for future use","completedDate":null,"nextAction":"15 minutes. Do today. cloudflare.com/forstartups"},{"id":"KDP-01","track":"KDP Publishing","level":"MAIN","task":"Choose first KDP niche + validate demand","status":"Not Started","pct":0,"priority":"Medium","startDate":"2026-08-01","dueDate":"2026-08-05","estMin":90,"actMin":null,"dependsOn":null,"unlocks":"KDP-02","serviceProvider":"Amazon KDP","expectedOutput":"Niche selected with search-volume evidence","actualOutput":null,"revenue":0,"leads":0,"notes":"Use KDP Rocket or Publisher Rocket to check category demand before committing. Avoid saturated niches (journals/planners are heavily oversaturated).","completedDate":null,"nextAction":"Pick 3 candidate niches, validate each"},{"id":"KDP-02","track":"KDP Publishing","level":"sub","task":"\u21b3 Design + publish first low-content book","status":"Not Started","pct":0,"priority":"Medium","startDate":"2026-08-05","dueDate":"2026-08-12","estMin":180,"actMin":null,"dependsOn":"KDP-01","unlocks":"KDP-03","serviceProvider":"Canva / KDP","expectedOutput":"Book live on Amazon","actualOutput":null,"revenue":0,"leads":0,"notes":"Low-content = fastest to ship (journal, planner, log book). Validates the pipeline before investing in higher-effort formats.","completedDate":null,"nextAction":"Design interior + cover, submit for review"},{"id":"KDP-03","track":"KDP Publishing","level":"sub","task":"\u21b3 Publish 4 more titles in validated niche","status":"Not Started","pct":0,"priority":"Low","startDate":"2026-08-12","dueDate":"2026-09-15","estMin":480,"actMin":null,"dependsOn":"KDP-02","unlocks":null,"serviceProvider":"Amazon KDP","expectedOutput":"5 titles live, ranking data available","actualOutput":null,"revenue":0,"leads":0,"notes":"Volume matters more than perfection in KDP \u2014 a catalog of 5+ outperforms 1 polished title.","completedDate":null,"nextAction":"Batch-produce using first title as template"},{"id":"YT-01","track":"Faceless YouTube","level":"MAIN","task":"Pick one channel niche to launch first (not all 4)","status":"Not Started","pct":0,"priority":"Medium","startDate":"2026-08-15","dueDate":"2026-08-18","estMin":60,"actMin":null,"dependsOn":null,"unlocks":"YT-02","serviceProvider":"\u2014","expectedOutput":"Single validated channel concept + first 10 video topics","actualOutput":null,"revenue":0,"leads":0,"notes":"Do not launch Finance/Insurance/SaaS/AI channels simultaneously \u2014 pick the one with the clearest existing NanoMunch content overlap to reuse scripts/research.","completedDate":null,"nextAction":"Decide which of the 4 planned channels goes first"},{"id":"YT-02","track":"Faceless YouTube","level":"sub","task":"\u21b3 Produce + publish first 5 videos","status":"Not Started","pct":0,"priority":"Medium","startDate":"2026-08-18","dueDate":"2026-09-08","estMin":600,"actMin":null,"dependsOn":"YT-01","unlocks":"YT-03","serviceProvider":"ElevenLabs / CapCut / YouTube","expectedOutput":"5 videos live, baseline watch-time data","actualOutput":null,"revenue":0,"leads":0,"notes":"Faceless = voiceover + stock/motion graphics. Budget real production time \u2014 this is the most time-intensive track in the whole system.","completedDate":null,"nextAction":"Script, record, edit, publish video 1"},{"id":"YT-03","track":"Faceless YouTube","level":"sub","task":"\u21b3 Review 30-day performance, decide continue/pivot/stop","status":"Not Started","pct":0,"priority":"Low","startDate":"2026-09-08","dueDate":"2026-09-15","estMin":60,"actMin":null,"dependsOn":"YT-02","unlocks":null,"serviceProvider":"YouTube Studio Analytics","expectedOutput":"Go/no-go decision with data","actualOutput":null,"revenue":0,"leads":0,"notes":"Faceless YouTube has a long payoff curve. Set an explicit checkpoint so this doesn't become an indefinite time sink.","completedDate":null,"nextAction":"Compare watch time + sub growth vs. time invested"},{"id":"PIN-01","track":"Pinterest","level":"MAIN","task":"Set up Pinterest Business account + claim nanomunch.com","status":"Not Started","pct":0,"priority":"Low","startDate":"2026-08-01","dueDate":"2026-08-02","estMin":30,"actMin":null,"dependsOn":null,"unlocks":"PIN-02","serviceProvider":"Pinterest","expectedOutput":"Verified business account","actualOutput":null,"revenue":0,"leads":0,"notes":"Free, 10-minute setup. Pinterest rewards consistency more than virality \u2014 plan for steady weekly output, not one-off pins.","completedDate":null,"nextAction":"Create account, verify domain"},{"id":"PIN-02","track":"Pinterest","level":"sub","task":"\u21b3 Design + schedule first 20 pins (tool graphics, GTM tips)","status":"Not Started","pct":0,"priority":"Low","startDate":"2026-08-02","dueDate":"2026-08-15","estMin":180,"actMin":null,"dependsOn":"PIN-01","unlocks":null,"serviceProvider":"Canva + Tailwind/Pinterest scheduler","expectedOutput":"20 pins live, driving referral traffic","actualOutput":null,"revenue":0,"leads":0,"notes":"Repurpose existing site graphics (calculator screenshots, GTM Scan results) rather than creating net-new assets.","completedDate":null,"nextAction":"Batch-design 20 pins from existing brand assets"},{"id":"THR-01","track":"Threads","level":"MAIN","task":"Create Threads account, cross-post first 10 posts","status":"Not Started","pct":0,"priority":"Low","startDate":"2026-08-01","dueDate":"2026-08-10","estMin":60,"actMin":null,"dependsOn":null,"unlocks":null,"serviceProvider":"Threads (Meta)","expectedOutput":"Active profile with consistent posting cadence","actualOutput":null,"revenue":0,"leads":0,"notes":"Threads favors short, opinionated founder takes over polished content \u2014 lowest production cost of any channel here.","completedDate":null,"nextAction":"Set up profile, repurpose 10 LinkedIn posts into Threads format"},{"id":"THR-02","track":"Threads","level":"sub","task":"\u21b3 Establish 3x/week posting rhythm for 30 days","status":"Not Started","pct":0,"priority":"Low","startDate":"2026-08-10","dueDate":"2026-09-10","estMin":30,"actMin":null,"dependsOn":"THR-01","unlocks":null,"serviceProvider":"Threads (Meta)","expectedOutput":"Consistent cadence established, baseline engagement data","actualOutput":null,"revenue":0,"leads":0,"notes":"Consistency compounds faster than virality on Threads. Track engagement weekly.","completedDate":null,"nextAction":"Post 3x/week, log engagement each Friday"}]
+;
+
+const TRACK_COLORS = {}; // assigned dynamically below from a muted palette wheel
+const PALETTE_WHEEL = ['#7E9683','#7C93AD','#C08966','#B99257','#9C8AA5','#7FA8A0','#A57C6B','#8A9A7E','#6F8CA3','#B87F8C'];
+
+let tasks = [];
+let currentView = 'mine'; // 'mine' | 'client'
+
+function loadData(){
+  const saved = localStorage.getItem('nanomunch_os_tracker_v2');
+  if(saved){
+    try{ tasks = JSON.parse(saved); return; }catch(e){}
+  }
+  tasks = JSON.parse(JSON.stringify(RAW_TASKS)).map(t => ({
+    ...t,
+    sharedUpdate: t.sharedUpdate || '' // client-safe field, starts empty — she fills in as she's ready to share
+  }));
+  saveData();
+}
+function saveData(){ localStorage.setItem('nanomunch_os_tracker_v2', JSON.stringify(tasks)); }
+
+function esc(str){
+  if(str === null || str === undefined) return '';
+  const d = document.createElement('div');
+  d.textContent = String(str);
+  return d.innerHTML;
+}
+
+function setView(v){
+  currentView = v;
+  document.getElementById('viewMineBtn').classList.toggle('active', v==='mine');
+  document.getElementById('viewClientBtn').classList.toggle('active', v==='client');
+  renderTasks();
+}
+
+function populateTrackOptions(){
+  const tracks = [...new Set(tasks.map(t=>t.track))];
+  const filterSel = document.getElementById('filterTrack');
+  const formSel = document.getElementById('newTrack');
+  filterSel.innerHTML = '<option value="all">All</option>' + tracks.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('');
+  formSel.innerHTML = tracks.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('');
+  tracks.forEach((t,i) => { TRACK_COLORS[t] = PALETTE_WHEEL[i % PALETTE_WHEEL.length]; });
+}
+
+function statusClass(status){
+  return { 'Completed':'done', 'In Progress':'in-progress', 'Blocked':'blocked', 'Not Started':'not-started' }[status] || 'not-started';
+}
+function priorityClass(p){ return (p||'medium').toLowerCase(); }
+
+function depReady(task){
+  if(!task.dependsOn) return true;
+  const firstDep = task.dependsOn.split(',')[0].trim();
+  const dep = tasks.find(t => t.id === firstDep);
+  if(!dep) return true; // unknown dep id, don't block display
+  return dep.status === 'Completed';
+}
+
+function renderTasks(){
+  const trackFilter = document.getElementById('filterTrack').value;
+  const statusFilter = document.getElementById('filterStatus').value;
+  const priorityFilter = document.getElementById('filterPriority').value;
+  const search = document.getElementById('searchInput').value.toLowerCase();
+
+  let filtered = tasks.filter(t => {
+    if(trackFilter !== 'all' && t.track !== trackFilter) return false;
+    if(statusFilter !== 'all' && t.status !== statusFilter) return false;
+    if(priorityFilter !== 'all' && t.priority !== priorityFilter) return false;
+    if(search && !t.task.toLowerCase().includes(search)) return false;
+    return true;
+  });
+
+  const order = {Critical:0, High:1, Medium:2, Low:3};
+  filtered.sort((a,b) => (order[a.priority]??9) - (order[b.priority]??9));
+
+  const board = document.getElementById('taskBoard');
+  if(filtered.length === 0){
+    board.innerHTML = `<div class="empty-state"><div class="icon"><i class="fas fa-inbox"></i></div><p>No tasks match your filters.</p></div>`;
+    updateStats(); updateCharts();
+    document.getElementById('taskCount').textContent = tasks.length + ' tasks';
+    return;
+  }
+
+  board.innerHTML = filtered.map(t => {
+    const isSub = t.level === 'sub';
+    const pct = t.pct || 0;
+    const ready = depReady(t);
+    const depLine = t.dependsOn ? `<span class="dep-flag"><i class="fas fa-${ready?'check':'lock'}"></i> ${ready?'Ready':'Waiting on '+esc(t.dependsOn)}</span>` : '';
+    const notesHtml = currentView === 'mine' && t.notes
+      ? `<div class="notes-box private"><div class="tag"><i class="fas fa-lock"></i> Private — internal only</div>${esc(t.notes).replace(/\\n/g,'<br>')}</div>` : '';
+    const sharedHtml = t.sharedUpdate
+      ? `<div class="notes-box shared"><div class="tag"><i class="fas fa-users"></i> Shared with client</div>${esc(t.sharedUpdate).replace(/\\n/g,'<br>')}</div>`
+      : (currentView==='client' ? `<div class="notes-box shared"><div class="tag"><i class="fas fa-users"></i> Shared with client</div><em style="color:var(--ink-faint)">No update shared yet.</em></div>` : '');
+
+    return `
+    <div class="task-card ${isSub?'is-sub':''}" onclick="toggleDetail('${t.id}')">
+      <span class="task-id">${esc(t.id)}</span>
+      <span class="task-name">${esc(t.task)}</span>
+      <span class="task-track" style="background:${TRACK_COLORS[t.track]}22;color:${TRACK_COLORS[t.track]}">${esc(t.track)}</span>
+      <span class="pill ${statusClass(t.status)}">${esc(t.status)}</span>
+      <span class="priority-label"><span class="dot-priority ${priorityClass(t.priority)}"></span>${esc(t.priority)}</span>
+      <div class="task-progress"><div class="bar"><div class="fill" style="width:${pct}%"></div></div><span class="pctnum">${pct}%</span></div>
+      ${depLine}
+      ${currentView==='mine' ? `
+      <div class="task-actions">
+        <button onclick="event.stopPropagation();editTask('${t.id}')" title="Edit"><i class="fas fa-pen"></i></button>
+        <button class="del" onclick="event.stopPropagation();deleteTask('${t.id}')" title="Delete"><i class="fas fa-trash"></i></button>
+      </div>` : ''}
+      <div class="task-detail" id="detail-${t.id}">
+        <div class="detail-grid">
+          <div class="detail-item"><span class="label">Due</span><span class="value">${esc(t.dueDate) || '—'}</span></div>
+          <div class="detail-item"><span class="label">Revenue</span><span class="value">${t.revenue ? '$'+t.revenue : '$0'}</span></div>
+          <div class="detail-item"><span class="label">Leads</span><span class="value">${t.leads || 0}</span></div>
+          <div class="detail-item"><span class="label">Provider</span><span class="value">${esc(t.serviceProvider) || '—'}</span></div>
+        </div>
+        ${t.dependsOn || t.unlocks ? `<div class="dep-chips">
+          ${t.dependsOn ? `<span class="dep-chip ${ready?'ready':'waiting'}"><i class="fas fa-link"></i> Depends on ${esc(t.dependsOn)}</span>` : ''}
+          ${t.unlocks ? `<span class="dep-chip ready"><i class="fas fa-unlock"></i> Unlocks ${esc(t.unlocks)}</span>` : ''}
+        </div>` : ''}
+        ${notesHtml}
+        ${sharedHtml}
+        ${t.nextAction ? `<div class="next-action"><strong>Next:</strong> ${esc(t.nextAction)}</div>` : ''}
+        ${currentView==='mine' ? `<div class="detail-actions">
+          <button class="btn btn-primary" onclick="event.stopPropagation();quickStatus('${t.id}','Completed')"><i class="fas fa-check"></i> Complete</button>
+          <button class="btn btn-outline" onclick="event.stopPropagation();quickStatus('${t.id}','In Progress')"><i class="fas fa-play"></i> Start</button>
+          <button class="btn btn-outline" onclick="event.stopPropagation();quickStatus('${t.id}','Blocked')"><i class="fas fa-pause"></i> Block</button>
+        </div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  updateStats();
+  updateCharts();
+  document.getElementById('taskCount').textContent = tasks.length + ' tasks';
+}
+
+function updateStats(){
+  const total = tasks.length;
+  const done = tasks.filter(t=>t.status==='Completed').length;
+  const inProgress = tasks.filter(t=>t.status==='In Progress').length;
+  const blocked = tasks.filter(t=>t.status==='Blocked').length;
+  const pct = total ? Math.round(done/total*100) : 0;
+  const revenue = tasks.reduce((s,t)=>s+(Number(t.revenue)||0),0);
+  const leads = tasks.reduce((s,t)=>s+(Number(t.leads)||0),0);
+  const todayStr = new Date().toISOString().split('T')[0];
+  const overdue = tasks.filter(t=>t.dueDate && t.dueDate < todayStr && t.status!=='Completed').length;
+
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat-card"><span class="num">${total}</span><span class="lbl">Total Tasks</span></div>
+    <div class="stat-card"><span class="num sage">${done}</span><span class="lbl">Completed</span></div>
+    <div class="stat-card"><span class="num">${inProgress}</span><span class="lbl">In Progress</span></div>
+    <div class="stat-card"><span class="num clay">${blocked}</span><span class="lbl">Blocked</span></div>
+    <div class="stat-card"><span class="num sage">${pct}%</span><span class="lbl">Complete</span></div>
+    <div class="stat-card"><span class="num">$${revenue.toLocaleString()}</span><span class="lbl">Revenue</span></div>
+    <div class="stat-card"><span class="num">${leads}</span><span class="lbl">Leads</span></div>
+    <div class="stat-card"><span class="num clay">${overdue}</span><span class="lbl">Overdue</span></div>
+  `;
+}
+
+function ringSvg(pct, size, strokeWidth, color, id){
+  const r = (size - strokeWidth) / 2;
+  const c = 2 * Math.PI * r;
+  const offset = c - (pct/100) * c;
+  const cx = size/2, cy = size/2;
+  return `<svg class="track-ring-svg" viewBox="0 0 ${size} ${size}" style="transform:rotate(-90deg)">
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--sand)" stroke-width="${strokeWidth}"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${color}" stroke-width="${strokeWidth}" stroke-linecap="round"
+      stroke-dasharray="${c}" stroke-dashoffset="${offset}" style="transition:stroke-dashoffset .8s ease"/>
+    <text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" class="t-pct" style="transform:rotate(90deg);transform-origin:${cx}px ${cy}px">${pct}%</text>
+  </svg>`;
+}
+
+function updateCharts(){
+  // Donut: status breakdown (real SVG arcs, not a legend pretending to be a chart)
+  const statuses = ['Completed','In Progress','Blocked','Not Started'];
+  const colors = {'Completed':'var(--status-done)','In Progress':'var(--status-progress)','Blocked':'var(--status-blocked)','Not Started':'var(--status-notstarted)'};
+  const counts = statuses.map(s => tasks.filter(t=>t.status===s).length);
+  const total = tasks.length || 1;
+  const size = 150, r = 60, strokeW = 20, cx = size/2, cy = size/2, c = 2*Math.PI*r;
+  let cumulative = 0;
+  const arcs = statuses.map((s,i) => {
+    const val = counts[i];
+    const frac = val/total;
+    const dash = frac * c;
+    const gap = c - dash;
+    const rotation = (cumulative/total) * 360 - 90;
+    cumulative += val;
+    return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${colors[s]}" stroke-width="${strokeW}"
+      stroke-dasharray="${dash} ${gap}" transform="rotate(${rotation} ${cx} ${cy})" style="transition:stroke-dasharray .8s ease"/>`;
+  }).join('');
+  const donePct = Math.round((counts[0]/total)*100);
+
+  document.getElementById('donutWrap').innerHTML = `
+    <svg class="donut-svg" viewBox="0 0 ${size} ${size}">
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--sand)" stroke-width="${strokeW}"/>
+      ${arcs}
+      <text x="${cx}" y="${cy-4}" text-anchor="middle" class="donut-center-label">${donePct}%</text>
+      <text x="${cx}" y="${cy+16}" text-anchor="middle" class="donut-center-sub">DONE</text>
+    </svg>
+    <div class="donut-legend">
+      ${statuses.map((s,i)=>`<div class="donut-legend-item"><span class="dot" style="background:${colors[s]}"></span>${s}<span class="count">${counts[i]}</span></div>`).join('')}
+    </div>`;
+
+  // Track garden: one ring per track
+  const trackNames = [...new Set(tasks.map(t=>t.track))];
+  document.getElementById('trackGarden').innerHTML = trackNames.map(tr => {
+    const trTasks = tasks.filter(t=>t.track===tr);
+    const trDone = trTasks.filter(t=>t.status==='Completed').length;
+    const p = trTasks.length ? Math.round(trDone/trTasks.length*100) : 0;
+    return `<div class="track-ring-item">
+      ${ringSvg(p, 64, 7, TRACK_COLORS[tr], tr)}
+      <span class="t-label">${esc(tr)}</span>
+    </div>`;
+  }).join('');
+}
+
+function toggleDetail(id){
+  const el = document.getElementById('detail-'+id);
+  if(el) el.classList.toggle('open');
+}
+function quickStatus(id, status){
+  const t = tasks.find(t=>t.id===id);
+  if(t){ t.status = status; if(status==='Completed') t.pct = 100; saveData(); renderTasks(); }
+}
+function deleteTask(id){
+  if(!confirm('Delete this task?')) return;
+  tasks = tasks.filter(t=>t.id!==id);
+  saveData(); populateTrackOptions(); renderTasks();
+}
+function editTask(id){
+  const t = tasks.find(t=>t.id===id);
+  if(!t) return;
+  toggleAddForm(true);
+  document.getElementById('newTaskName').value = t.task;
+  document.getElementById('newTrack').value = t.track;
+  document.getElementById('newStatus').value = t.status;
+  document.getElementById('newPriority').value = t.priority;
+  document.getElementById('newDueDate').value = t.dueDate || '';
+  document.getElementById('newPct').value = t.pct || 0;
+  document.getElementById('newDependsOn').value = t.dependsOn || '';
+  document.getElementById('newRevenue').value = t.revenue || 0;
+  document.getElementById('newLeads').value = t.leads || 0;
+  document.getElementById('newNotes').value = t.notes || '';
+  document.getElementById('newSharedUpdate').value = t.sharedUpdate || '';
+  document.getElementById('newNextAction').value = t.nextAction || '';
+  document.getElementById('addTaskForm').dataset.editId = id;
+  document.querySelector('#addTaskForm .form-actions .btn-primary').innerHTML = '<i class="fas fa-save"></i> Update Task';
+}
+function toggleAddForm(forceOpen){
+  const form = document.getElementById('addTaskForm');
+  if(forceOpen){ form.classList.add('open'); return; }
+  form.classList.toggle('open');
+  if(!form.classList.contains('open')){
+    form.dataset.editId = '';
+    document.querySelector('#addTaskForm .form-actions .btn-primary').innerHTML = '<i class="fas fa-save"></i> Save Task';
+    ['newTaskName','newNotes','newSharedUpdate','newNextAction','newDueDate','newDependsOn'].forEach(id=>document.getElementById(id).value='');
+    ['newPct','newRevenue','newLeads'].forEach(id=>document.getElementById(id).value=0);
+  }
+}
+function addTask(){
+  const name = document.getElementById('newTaskName').value.trim();
+  if(!name){ alert('Please enter a task name.'); return; }
+  const editId = document.getElementById('addTaskForm').dataset.editId;
+  const vals = {
+    task: name,
+    track: document.getElementById('newTrack').value,
+    status: document.getElementById('newStatus').value,
+    priority: document.getElementById('newPriority').value,
+    dueDate: document.getElementById('newDueDate').value || '',
+    pct: parseInt(document.getElementById('newPct').value)||0,
+    dependsOn: document.getElementById('newDependsOn').value || '',
+    revenue: parseFloat(document.getElementById('newRevenue').value)||0,
+    leads: parseFloat(document.getElementById('newLeads').value)||0,
+    notes: document.getElementById('newNotes').value || '',
+    sharedUpdate: document.getElementById('newSharedUpdate').value || '',
+    nextAction: document.getElementById('newNextAction').value || ''
+  };
+  if(editId){
+    const t = tasks.find(t=>t.id===editId);
+    if(t) Object.assign(t, vals);
+  } else {
+    tasks.push({ id: 'T-'+Date.now(), level:'MAIN', ...vals });
+  }
+  saveData(); populateTrackOptions(); renderTasks(); toggleAddForm();
+}
+function exportData(){
+  const blob = new Blob([JSON.stringify(tasks,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'nanomunch_os_tracker.json'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+loadData();
+populateTrackOptions();
+renderTasks();
+</script>
+</body>
+</html>
