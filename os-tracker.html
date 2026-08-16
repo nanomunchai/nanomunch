@@ -17,42 +17,42 @@
    Deliberately muted — nothing saturated, nothing alarming.
    ============================================================ */
 :root{
-  --bg:#F6F4EE;
+  --bg:#F9F7F2;
   --surface:#FFFFFF;
-  --surface-2:#FBFAF6;
-  --ink:#33362F;
-  --ink-soft:#767A6E;
-  --ink-faint:#A5A899;
+  --surface-2:#FDF8EE;
+  --ink:#1A1A2E;
+  --ink-soft:#4A4A4A;
+  --ink-faint:#918F9E;
 
-  --sage:#7E9683;
-  --sage-deep:#5A7360;
-  --sage-tint:#E7EEE6;
+  --sage:#C9A84C;
+  --sage-deep:#9C7A2E;
+  --sage-tint:rgba(201,168,76,.12);
 
-  --clay:#C08966;
-  --clay-deep:#9C6640;
-  --clay-tint:#F3E4D8;
+  --clay:#2E75B6;
+  --clay-deep:#1B4F8A;
+  --clay-tint:#E6ECF2;
 
-  --sand:#E6DFCC;
-  --sand-deep:#D3C9AE;
+  --sand:rgba(26,26,46,.1);
+  --sand-deep:rgba(26,26,46,.18);
 
-  --status-done:#7E9683;
-  --status-done-tint:#E7EEE6;
-  --status-progress:#7C93AD;
-  --status-progress-tint:#E6ECF2;
-  --status-blocked:#C08966;
-  --status-blocked-tint:#F3E4D8;
-  --status-notstarted:#A5A899;
+  --status-done:#2A9D5C;
+  --status-done-tint:#E6F4ED;
+  --status-progress:#1B4F8A;
+  --status-progress-tint:#D6EAF8;
+  --status-blocked:#C13535;
+  --status-blocked-tint:#FDEAEA;
+  --status-notstarted:#918F9E;
   --status-notstarted-tint:#EDECE5;
 
-  --priority-critical:#A66446;
-  --priority-high:#B99257;
-  --priority-medium:#7E9683;
-  --priority-low:#A5A899;
+  --priority-critical:#C13535;
+  --priority-high:#E07B1A;
+  --priority-medium:#9C7A2E;
+  --priority-low:#918F9E;
 
   --radius:14px;
   --radius-sm:8px;
-  --shadow:0 2px 20px rgba(51,54,47,.06);
-  --shadow-hover:0 6px 28px rgba(51,54,47,.1);
+  --shadow:0 4px 24px rgba(26,26,46,.08);
+  --shadow-hover:0 8px 32px rgba(26,26,46,.12);
   --font-head:'Syne',sans-serif;
   --font-body:'DM Sans',sans-serif;
 }
@@ -134,7 +134,7 @@ a{text-decoration:none;color:inherit}
 .track-ring-item{display:flex;flex-direction:column;align-items:center;gap:.35rem;text-align:center}
 .track-ring-svg{width:64px;height:64px}
 .track-ring-item .t-label{font-size:.64rem;font-weight:600;color:var(--ink-soft);line-height:1.25;max-width:90px}
-.track-ring-item .t-pct{font-family:var(--font-head);font-size:.78rem;font-weight:800;fill:var(--ink)}
+.track-ring-item .t-pct{font-family:var(--font-head);font-size:.78rem;font-weight:800;fill:var(--ink);paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
 
 /* ---------- filter bar ---------- */
 .filter-bar{display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:1.1rem;padding:.85rem 1.1rem;
@@ -343,7 +343,7 @@ const RAW_TASKS = [{"id":"NM-01","track":"NanoMunch","level":"MAIN","task":"Regi
 ;
 
 const TRACK_COLORS = {}; // assigned dynamically below from a muted palette wheel
-const PALETTE_WHEEL = ['#7E9683','#7C93AD','#C08966','#B99257','#9C8AA5','#7FA8A0','#A57C6B','#8A9A7E','#6F8CA3','#B87F8C'];
+const PALETTE_WHEEL = ['#9C7A2E','#1B4F8A','#2A9D5C','#C9A84C','#4A4A6A','#1B7A8A','#9C6640','#6B7A9C','#8A6A9C','#7A9C6B'];
 
 let tasks = [];
 let currentView = 'mine'; // 'mine' | 'client'
@@ -486,14 +486,17 @@ function updateStats(){
   const todayStr = new Date().toISOString().split('T')[0];
   const overdue = tasks.filter(t=>t.dueDate && t.dueDate < todayStr && t.status!=='Completed').length;
 
+  const revenueDisplay = revenue > 0 ? '$'+revenue.toLocaleString() : '<span style="color:var(--ink-faint);font-weight:600">—</span>';
+  const leadsDisplay = leads > 0 ? leads : '<span style="color:var(--ink-faint);font-weight:600">—</span>';
+
   document.getElementById('statsRow').innerHTML = `
     <div class="stat-card"><span class="num">${total}</span><span class="lbl">Total Tasks</span></div>
     <div class="stat-card"><span class="num sage">${done}</span><span class="lbl">Completed</span></div>
     <div class="stat-card"><span class="num">${inProgress}</span><span class="lbl">In Progress</span></div>
     <div class="stat-card"><span class="num clay">${blocked}</span><span class="lbl">Blocked</span></div>
     <div class="stat-card"><span class="num sage">${pct}%</span><span class="lbl">Complete</span></div>
-    <div class="stat-card"><span class="num">$${revenue.toLocaleString()}</span><span class="lbl">Revenue</span></div>
-    <div class="stat-card"><span class="num">${leads}</span><span class="lbl">Leads</span></div>
+    <div class="stat-card"><span class="num">${revenueDisplay}</span><span class="lbl">Revenue</span></div>
+    <div class="stat-card"><span class="num">${leadsDisplay}</span><span class="lbl">Leads</span></div>
     <div class="stat-card"><span class="num clay">${overdue}</span><span class="lbl">Overdue</span></div>
   `;
 }
