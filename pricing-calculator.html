@@ -93,6 +93,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:.9rem 2rem;display:f
 .gg-opt.selected-maybe{background:var(--amber-l);border-color:var(--amber);color:var(--amber)}
 .gg-opt.selected-no{background:var(--red-l);border-color:var(--red);color:var(--red)}
 
+.frame-q{margin-bottom:1.5rem}
+.frame-q label{display:block;font-size:.86rem;font-weight:600;color:var(--navy);margin-bottom:.6rem}
+.frame-opts{display:flex;flex-wrap:wrap;gap:.5rem}
+.frame-opt{font-size:.82rem;font-weight:600;padding:.6rem 1.1rem;border-radius:8px;border:1.5px solid var(--border2);background:var(--white);color:var(--muted);cursor:pointer;transition:all .15s}
+.frame-opt:hover{border-color:var(--gold)}
+.frame-opt.selected{background:var(--gold-lt);border-color:var(--gold);color:var(--gold2)}
+.cadence-hint{font-size:.76rem;color:var(--gold2);font-weight:600;margin-top:.3rem}
+
 .btn-gold{background:var(--gold);color:var(--navy);padding:.85rem 1.75rem;border-radius:8px;font-weight:700;font-family:'Syne',sans-serif;font-size:.93rem;border:2px solid var(--gold);display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;transition:all .2s;width:100%;justify-content:center}
 .btn-gold:hover{background:var(--gold2);border-color:var(--gold2);transform:translateY(-2px)}
 .btn-gold:disabled{opacity:.4;cursor:not-allowed;transform:none}
@@ -172,8 +180,32 @@ footer{background:var(--navy);padding:2rem;text-align:center}
 
 <div class="wrap">
 
+  <!-- FRAMING STEP -->
+  <div class="section-card" id="framing-section">
+    <h2><i class="fas fa-compass"></i> Quick Setup</h2>
+    <p class="section-sub">Two questions so the rest of the tool speaks in the right terms — no industry guesswork, just the right labels for your numbers.</p>
+
+    <div class="frame-q">
+      <label>What are you pricing?</label>
+      <div class="frame-opts" id="pricingTypeOpts">
+        <button type="button" class="frame-opt" data-val="product" onclick="setPricingType('product',this)">Product</button>
+        <button type="button" class="frame-opt" data-val="onetime" onclick="setPricingType('onetime',this)">One-Time Service</button>
+        <button type="button" class="frame-opt" data-val="monthly" onclick="setPricingType('monthly',this)">Monthly Subscription</button>
+        <button type="button" class="frame-opt" data-val="annual" onclick="setPricingType('annual',this)">Annual Retainer</button>
+      </div>
+    </div>
+    <div class="frame-q">
+      <label>Who's the buyer?</label>
+      <div class="frame-opts" id="buyerTypeOpts">
+        <button type="button" class="frame-opt" data-val="b2b" onclick="setBuyerType('b2b',this)">B2B</button>
+        <button type="button" class="frame-opt" data-val="b2c" onclick="setBuyerType('b2c',this)">B2C</button>
+      </div>
+    </div>
+    <button class="btn-gold" id="continueBtn" onclick="continueToQuestions()" disabled>Continue →</button>
+  </div>
+
   <!-- VAN WESTENDORP -->
-  <div class="section-card" id="vw-section">
+  <div class="section-card" id="vw-section" style="display:none">
     <h2><i class="fas fa-layer-group"></i> Part 1: Van Westendorp</h2>
     <p class="section-sub">Four questions, one price axis. Answer as if you were your own target customer looking at your actual offer.</p>
 
@@ -200,7 +232,7 @@ footer{background:var(--navy);padding:2rem;text-align:center}
   </div>
 
   <!-- GABOR-GRANGER -->
-  <div class="section-card" id="gg-section">
+  <div class="section-card" id="gg-section" style="display:none">
     <h2><i class="fas fa-chart-line"></i> Part 2: Gabor-Granger</h2>
     <p class="section-sub">Enter the price you're currently considering. We'll test six points around it — mark whether you'd buy at each.</p>
     <div class="gg-base-wrap">
@@ -212,7 +244,7 @@ footer{background:var(--navy);padding:2rem;text-align:center}
     </div>
   </div>
 
-  <button class="btn-gold" id="seeResultsBtn" onclick="showEmailGate()" disabled><i class="fas fa-calculator"></i> Calculate My Price Range →</button>
+  <button class="btn-gold" id="seeResultsBtn" onclick="showEmailGate()" disabled style="display:none"><i class="fas fa-calculator"></i> Calculate My Price Range →</button>
 
   <!-- LEAD GATE -->
   <div class="email-card" id="email-gate" style="margin-top:1.5rem">
@@ -235,21 +267,26 @@ footer{background:var(--navy);padding:2rem;text-align:center}
       <span class="r-price" id="resultPrice">$0</span>
       <div class="r-range" id="resultRange">Acceptable range: $0 – $0</div>
     </div>
+    <p style="text-align:center;margin-bottom:1.5rem"><a href="#" onclick="backToAnswers(event)" style="font-size:.8rem;color:var(--gold2);font-weight:600;text-decoration:underline">← Adjust my answers</a></p>
 
     <div class="section-card">
       <h2><i class="fas fa-layer-group"></i> Van Westendorp Read</h2>
+      <p class="section-sub" id="vwCadenceCaption" style="margin-bottom:.75rem"></p>
       <div class="chart-box" id="vwChart"></div>
       <div class="dim-grid" id="vwDims"></div>
     </div>
 
     <div class="section-card">
       <h2><i class="fas fa-chart-line"></i> Gabor-Granger Read</h2>
+      <p class="section-sub" id="ggCadenceCaption" style="margin-bottom:.75rem"></p>
       <div class="chart-box" id="ggChart"></div>
       <div class="dim-grid" id="ggDims"></div>
     </div>
 
     <div class="caveat-box">
-      <strong>Read this before you set a price.</strong> This snapshot is based on your own estimate as a single respondent — directional, not statistically validated. The real version of this analysis runs the same two questions past 30–50 of your actual prospects and gives you a defensible number, not a guess. That's exactly what a GTM Sprint builds for you.
+      <strong>Why this is a directional read, not a lab result.</strong> The Van Westendorp and Gabor-Granger methods are self-referential — they work by asking you, as the founder, to put yourself in your customer's shoes. The four price points you provided are the calibration. No industry average can replace your own judgement about your specific market, product, and customers.
+      <br><br>
+      This tool gives you a directional read on where your price might sit. The real version? Run the same two frameworks with 30–50 of your actual prospects. That gives you a defensible number, not a guess.
     </div>
 
     <div id="routing-cta">
@@ -283,6 +320,53 @@ footer{background:var(--navy);padding:2rem;text-align:center}
 let ggRungs = [];       // [{price, label}]
 let ggAnswers = {};      // {price: 'yes'|'maybe'|'no'}
 let phoneInput;
+let pricingType = null;  // 'product' | 'onetime' | 'monthly' | 'annual'
+let buyerType = null;    // 'b2b' | 'b2c'
+
+// ============================================================
+// FRAMING STEP
+// ============================================================
+function setPricingType(val, btn){
+  pricingType = val;
+  document.querySelectorAll('#pricingTypeOpts .frame-opt').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  checkFramingReady();
+}
+function setBuyerType(val, btn){
+  buyerType = val;
+  document.querySelectorAll('#buyerTypeOpts .frame-opt').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  checkFramingReady();
+}
+function checkFramingReady(){
+  document.getElementById('continueBtn').disabled = !(pricingType && buyerType);
+}
+function cadenceSuffix(){
+  if(pricingType === 'monthly') return '/month';
+  if(pricingType === 'annual') return '/year';
+  if(pricingType === 'onetime') return ' (one-time)';
+  return '';
+}
+function fmtPrice(n){
+  return '$' + Math.round(n) + cadenceSuffix();
+}
+function continueToQuestions(){
+  document.getElementById('framing-section').style.display = 'none';
+  document.getElementById('vw-section').style.display = '';
+  document.getElementById('gg-section').style.display = '';
+  document.getElementById('seeResultsBtn').style.display = '';
+  const cadenceNote = cadenceSuffix() ? ` — enter your price ${cadenceSuffix().replace(' (one-time)','as a one-time fee').replace('/', 'per ')}` : '';
+  document.querySelectorAll('.vw-hint').forEach(el => {
+    if(!el.dataset.baseText) el.dataset.baseText = el.textContent;
+    el.textContent = el.dataset.baseText + cadenceNote;
+  });
+  const ggLabel = document.querySelector('.gg-base-wrap label');
+  if(ggLabel && !ggLabel.dataset.baseText){
+    ggLabel.dataset.baseText = ggLabel.textContent;
+  }
+  if(ggLabel) ggLabel.textContent = ggLabel.dataset.baseText + cadenceNote;
+  document.getElementById('vw-section').scrollIntoView({behavior:'smooth'});
+}
 
 // ============================================================
 // COOKIE BANNER
@@ -312,7 +396,7 @@ function buildLadder(){
   ggAnswers = {};
   ladderEl.innerHTML = ggRungs.map(p => `
     <div class="gg-rung">
-      <span class="rung-price">$${p}</span>
+      <span class="rung-price">${fmtPrice(p)}</span>
       <div class="rung-options">
         <button type="button" class="gg-opt" data-price="${p}" data-val="yes" onclick="setGGAnswer(${p},'yes',this)">Would buy</button>
         <button type="button" class="gg-opt" data-price="${p}" data-val="maybe" onclick="setGGAnswer(${p},'maybe',this)">Might consider</button>
@@ -343,6 +427,18 @@ function checkReady(){
 // ============================================================
 // LEAD GATE
 // ============================================================
+function backToAnswers(e){
+  e.preventDefault();
+  document.getElementById('results').classList.remove('active');
+  document.getElementById('email-gate').classList.remove('active');
+  document.getElementById('vw-section').style.display = '';
+  document.getElementById('gg-section').style.display = '';
+  document.getElementById('seeResultsBtn').style.display = '';
+  document.getElementById('userForm').style.display = '';
+  document.getElementById('skipBtn').style.display = '';
+  document.getElementById('vw-section').scrollIntoView({behavior:'smooth'});
+}
+
 function showEmailGate(){
   document.getElementById('vw-section').style.display='none';
   document.getElementById('gg-section').style.display='none';
@@ -383,7 +479,7 @@ function showResults(){
   // Optimal Price Point (classic VW approximation for a single respondent):
   // midpoint between the "expensive-but-still-buy" ceiling and the "bargain" floor
   const opp = Math.round((expensive + cheap) / 2);
-  const rangeLow = Math.min(cheap, tooCheap) > 0 ? Math.round(tooCheap) : Math.round(cheap * 0.9);
+  const rangeLow = Math.round(tooCheap > 0 ? tooCheap : cheap * 0.9);
   const rangeHigh = Math.round(tooExpensive);
 
   // Gabor-Granger: expected-revenue-maximizing rung
@@ -399,19 +495,26 @@ function showResults(){
 
   const suggested = Math.round((opp + bestPrice) / 2);
 
-  document.getElementById('resultPrice').textContent = '$' + suggested;
-  document.getElementById('resultRange').textContent = `Acceptable range: $${rangeLow} – $${rangeHigh}`;
+  const cadenceCaption = pricingType === 'monthly' ? 'Prices below are your monthly price.'
+    : pricingType === 'annual' ? 'Prices below are your annual price.'
+    : pricingType === 'onetime' ? 'Prices below are your one-time fee.'
+    : 'Prices below are per unit sold.';
+  document.getElementById('vwCadenceCaption').textContent = cadenceCaption;
+  document.getElementById('ggCadenceCaption').textContent = cadenceCaption;
+
+  document.getElementById('resultPrice').textContent = fmtPrice(suggested);
+  document.getElementById('resultRange').textContent = `Acceptable range: ${fmtPrice(rangeLow)} – ${fmtPrice(rangeHigh)}`;
 
   // VW chart: simple price-axis with 4 markers
   document.getElementById('vwChart').innerHTML = renderVWChart(tooCheap, cheap, expensive, tooExpensive, opp);
   document.getElementById('vwDims').innerHTML = `
-    <div class="dim-item"><span class="dim-val">$${opp}</span><span class="dim-lbl">Optimal Point</span></div>
-    <div class="dim-item"><span class="dim-val">$${rangeLow}–$${rangeHigh}</span><span class="dim-lbl">Acceptable Range</span></div>`;
+    <div class="dim-item"><span class="dim-val">${fmtPrice(opp)}</span><span class="dim-lbl">Optimal Point</span></div>
+    <div class="dim-item"><span class="dim-val">${fmtPrice(rangeLow)}–${fmtPrice(rangeHigh)}</span><span class="dim-lbl">Acceptable Range</span></div>`;
 
   // GG chart: bar chart of weighted response by price
   document.getElementById('ggChart').innerHTML = renderGGChart(ggData);
   document.getElementById('ggDims').innerHTML = `
-    <div class="dim-item"><span class="dim-val">$${bestPrice}</span><span class="dim-lbl">Best Revenue Point</span></div>
+    <div class="dim-item"><span class="dim-val">${fmtPrice(bestPrice)}</span><span class="dim-lbl">Best Revenue Point</span></div>
     <div class="dim-item"><span class="dim-val">${ggData.filter(d=>d.answer==='yes').length}/${ggData.length}</span><span class="dim-lbl">Confirmed "Would Buy"</span></div>`;
 }
 
@@ -425,7 +528,7 @@ function renderVWChart(tooCheap, cheap, expensive, tooExpensive, opp){
     {x: cheap, label:'Cheap', color:'#2A9D5C'},
     {x: expensive, label:'Expensive', color:'#E07B1A'},
     {x: tooExpensive, label:'Too Expensive', color:'#C13535'},
-  ];
+  ].filter(p => !isNaN(p.x) && p.x >= 0);
   const markers = points.map((p,i) => {
     const cx = scale(p.x);
     const y = 30 + (i%2)*35;
@@ -434,7 +537,7 @@ function renderVWChart(tooCheap, cheap, expensive, tooExpensive, opp){
       <text x="${cx}" y="${y+18}" text-anchor="middle" font-size="9" fill="#888">${p.label}</text>`;
   }).join('');
   const oppX = scale(opp);
-  return `<svg class="chart-svg" viewBox="0 0 ${w} ${h}">
+  return `<svg class="chart-svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="Van Westendorp price sensitivity chart showing your too cheap, cheap, expensive, and too expensive thresholds, with the estimated optimal price point marked">
     <line x1="${pad}" y1="65" x2="${w-pad}" y2="65" stroke="#E8E4D8" stroke-width="2"/>
     <line x1="${oppX}" y1="15" x2="${oppX}" y2="105" stroke="#C9A84C" stroke-width="2" stroke-dasharray="4 3"/>
     ${markers}
@@ -451,7 +554,7 @@ function renderGGChart(ggData){
     return `<rect x="${x}" y="${y}" width="${barW}" height="${barH}" rx="4" fill="${colors[d.answer]||'#ccc'}"/>
       <text x="${x+barW/2}" y="135" text-anchor="middle" font-size="10" font-weight="700" fill="#1A1A2E">$${d.price}</text>`;
   }).join('');
-  return `<svg class="chart-svg" viewBox="0 0 ${w} ${h}">
+  return `<svg class="chart-svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="Gabor-Granger chart showing likelihood to buy at each tested price point">
     <line x1="${pad}" y1="120" x2="${w-pad}" y2="120" stroke="#E8E4D8" stroke-width="2"/>
     ${bars}
   </svg>`;
