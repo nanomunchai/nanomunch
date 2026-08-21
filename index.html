@@ -236,6 +236,21 @@ h2{font-family:'Syne',sans-serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:
 .serve-card h4{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;color:var(--navy);margin-bottom:.25rem}
 .serve-card p{font-size:.75rem;color:var(--muted);line-height:1.5}
 
+.process-section{background:var(--white);padding:5rem 2rem}
+.process-inner{max-width:1100px;margin:0 auto}
+.process-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.1rem;margin-top:2.5rem;position:relative}
+.process-step{border:1.5px solid var(--border2);border-radius:14px;padding:1.75rem;transition:all .25s;position:relative;overflow:hidden;background:var(--off)}
+.process-step::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold2));opacity:0;transition:opacity .25s}
+.process-step:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:var(--shadow-g)}
+.process-step:hover::after{opacity:1}
+.process-icon{width:42px;height:42px;background:var(--pale);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:1.1rem;border:1px solid var(--border);color:var(--gold2);position:relative}
+.process-icon i{font-size:1.2rem}
+.process-icon .process-step-num{position:absolute;top:-8px;right:-8px;width:20px;height:20px;border-radius:50%;background:linear-gradient(90deg,var(--gold),var(--gold2));color:var(--navy);font-family:'Syne',sans-serif;font-size:.65rem;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid var(--white)}
+.process-step h3{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:.55rem}
+.process-step p{font-size:.85rem;color:var(--muted);line-height:1.65}
+.process-cta{text-align:center;margin-top:2.5rem}
+@media(max-width:640px){.process-section{padding:3.5rem 1rem}}
+
 /* ── ABOUT ── */
 .about-section{padding:5rem 2rem;background:var(--white)}
 .about-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
@@ -251,7 +266,7 @@ h2{font-family:'Syne',sans-serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:
 .about-links{display:flex;gap:.65rem;flex-wrap:wrap;margin-top:1.5rem}
 .pill{display:inline-flex;align-items:center;gap:.35rem;padding:.42rem .9rem;border:1.5px solid var(--border2);border-radius:100px;font-size:.77rem;color:var(--body);transition:all .2s;font-weight:500}
 .pill:hover{border-color:var(--gold);color:var(--gold2)}
-.founder-img{width:160px;height:160px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 1.75rem auto;border:3px solid var(--gold)}
+.founder-img{width:160px;height:160px;border-radius:50%;object-fit:cover;object-position:50% 15%;display:block;margin:0 auto 1.75rem auto;border:3px solid var(--gold)}
 
 /* ── FAQ ── */
 .faq-section{background:var(--off);padding:5rem 2rem}
@@ -274,21 +289,21 @@ h2{font-family:'Syne',sans-serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:
 .cta-btns{display:flex;gap:.85rem;justify-content:center;flex-wrap:wrap}
 
 /* ── CHAT BOT (AI AGENT) ── */
-.chat-button{position:fixed;bottom:24px;right:24px;z-index:1000;width:60px;height:60px;border-radius:50%;background:var(--gold);color:var(--navy);border:none;box-shadow:0 4px 20px rgba(201,168,76,.4);cursor:pointer;font-size:28px;line-height:1;transition:transform .2s,box-shadow .2s;display:flex;align-items:center;justify-content:center}
+.chat-button{position:fixed;bottom:24px;right:24px;z-index:1000;width:60px;height:60px;border-radius:50%;background:var(--gold);color:var(--navy);border:2.5px solid var(--navy);box-shadow:0 4px 20px rgba(201,168,76,.4);cursor:pointer;font-size:28px;line-height:1;transition:transform .2s,box-shadow .2s;display:flex;align-items:center;justify-content:center}
 .chat-button:hover{transform:scale(1.05);box-shadow:0 6px 30px rgba(201,168,76,.6)}
-.chat-window{position:fixed;bottom:100px;right:24px;z-index:999;width:380px;max-width:calc(100vw - 48px);max-height:500px;background:var(--white);border-radius:var(--radius);box-shadow:0 8px 40px rgba(0,0,0,.15);display:none;flex-direction:column;overflow:hidden;border:1px solid var(--border);animation:slideUp .3s ease}
+.chat-window{position:fixed;bottom:100px;right:24px;z-index:999;width:380px;max-width:calc(100vw - 48px);max-height:500px;background:var(--white);border-radius:var(--radius);box-shadow:0 8px 40px rgba(0,0,0,.15),0 0 0 1px rgba(26,26,46,.06);display:none;flex-direction:column;overflow:hidden;border:2.5px solid var(--navy);animation:slideUp .3s ease}
 .chat-window.open{display:flex}
 @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .chat-header{background:var(--navy);color:var(--white);padding:.8rem 1rem;font-weight:700;font-family:'Syne',sans-serif;display:flex;justify-content:space-between;align-items:center}
 .chat-header button{background:none;border:none;color:rgba(255,255,255,.6);font-size:1.2rem;cursor:pointer;transition:color .2s}
 .chat-header button:hover{color:var(--white)}
-.chat-messages{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.6rem;background:var(--off);max-height:320px}
+.chat-messages{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.6rem;background:var(--white);max-height:320px;border:2px solid var(--navy);margin:.6rem;border-radius:10px;box-shadow:inset 0 1px 4px rgba(26,26,46,.08)}
 .msg{padding:.6rem .9rem;border-radius:12px;max-width:85%;font-size:.85rem;line-height:1.5;animation:msgIn .25s ease}
 @keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .msg.bot{align-self:flex-start;background:var(--white);border:1px solid var(--border);color:var(--body)}
 .msg.user{align-self:flex-end;background:var(--gold);color:var(--navy)}
-.chat-input-area{display:flex;gap:.4rem;padding:.6rem;border-top:1px solid var(--border2);background:var(--white)}
-.chat-input-area input{flex:1;border:1px solid var(--border2);border-radius:20px;padding:.5rem .9rem;font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;transition:border-color .2s}
+.chat-input-area{display:flex;gap:.4rem;padding:.6rem;border-top:2px solid var(--navy);background:var(--white)}
+.chat-input-area input{flex:1;border:1.5px solid var(--navy);border-radius:20px;padding:.5rem .9rem;font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;transition:border-color .2s}
 .chat-input-area input:focus{border-color:var(--gold)}
 .chat-input-area button{background:var(--gold);border:none;border-radius:50%;width:36px;height:36px;font-size:1.1rem;cursor:pointer;transition:background .2s;display:flex;align-items:center;justify-content:center}
 .chat-input-area button:hover{background:var(--gold2)}
@@ -329,7 +344,7 @@ footer p{font-size:.75rem;color:rgba(255,255,255,.35)}
 @media(max-width:480px){
   nav{padding:.8rem 1rem}
   .hero{padding:5rem 1rem 3rem}
-  .calc-section,.services-section,.serve-section,.about-section,.faq-section,.cta-section,.marquee-section{padding:3.5rem 1rem}
+  .calc-section,.services-section,.process-section,.serve-section,.about-section,.faq-section,.cta-section,.marquee-section{padding:3.5rem 1rem}
   h1{font-size:1.9rem}
   h2{font-size:1.5rem}
   .proof-row{gap:1.1rem}
@@ -375,6 +390,7 @@ footer p{font-size:.75rem;color:rgba(255,255,255,.35)}
       </ul>
     </li>
     <li><a href="#services">Services</a></li>
+    <li><a href="#process">Process</a></li>
     <li><a href="#about">About</a></li>
     <li><a href="#faq">FAQ</a></li>
     <li class="nav-item">
@@ -398,6 +414,7 @@ footer p{font-size:.75rem;color:rgba(255,255,255,.35)}
   <a href="gtm-quick-scan.html" onclick="toggleMenu()">GTM Quick Scan</a>
   <a href="pricing-calculator.html" onclick="toggleMenu()">Pricing Sensitivity Calculator</a>
   <a href="#services" onclick="toggleMenu()">Services</a>
+  <a href="#process" onclick="toggleMenu()">Process</a>
   <a href="#about" onclick="toggleMenu()">About</a>
   <a href="#faq" onclick="toggleMenu()">FAQ</a>
   <a href="#" onclick="return false" style="opacity:.55;pointer-events:none">Blog: Systems (coming soon)</a>
@@ -604,6 +621,40 @@ footer p{font-size:.75rem;color:rgba(255,255,255,.35)}
       <div class="svc-card reveal visible"><div class="svc-icon"><i class="fas fa-magnifying-glass-chart"></i></div><h3>Operations Audit</h3><p>You know something in your operations is bleeding time or money — you just can't pin down what. Two hours later, you have the answer: the specific bottleneck, ranked against everything else competing for your attention, with a clear next step.</p><a href="https://calendly.com/nanomunchai/free-strategy-call-nanomunch" class="svc-link" target="_blank">Book a session →</a></div>
       <div class="svc-card reveal visible"><div class="svc-icon"><i class="fas fa-diagram-project"></i></div><h3>Systems Sprint</h3><p>Four weeks from now, the system that was living in your head — or nowhere at all — is documented, built, and running without you. SOPs, workflows, and the handoff your team needs to keep it moving after I leave.</p><a href="https://calendly.com/nanomunchai/free-strategy-call-nanomunch" class="svc-link" target="_blank">Enquire about availability →</a></div>
       <div class="svc-card reveal urgent-card visible"><div class="svc-icon"><i class="fas fa-phone-volume" style="color:var(--gold)"></i></div><h3>Losing Ground Right Now?</h3><p>Your strategic direction keeps you competitive, but operational inefficiencies are slowing your execution.<br><strong>Or —</strong><br>your systems are preventing you from scaling and every week costs you pipeline.</p><a href="https://calendly.com/nanomunchai/free-strategy-call-nanomunch" class="btn-gold urgent-cta" target="_blank">Urgent! Get In Touch Now →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process-section" id="process">
+  <div class="process-inner">
+    <span class="sec-label reveal visible">How It Works</span>
+    <h2 class="reveal visible">A Clear Path From<br>"Something's Broken" to a System That Runs</h2>
+    <p class="sec-sub reveal visible">No 40-slide deck you have to translate into action yourself. Every engagement moves through the same four stages — evidence first, priorities second, a working system last.</p>
+    <div class="process-grid">
+      <div class="process-step reveal visible">
+        <div class="process-icon"><i class="fas fa-magnifying-glass"></i><span class="process-step-num">01</span></div>
+        <h3>Diagnose</h3>
+        <p>We agree on what's actually under the microscope — your funnel, your ops, your team, or all three — and why. A focused diagnosis beats a vague one every time, so we start with the questions that matter most to your revenue, not a generic checklist.</p>
+      </div>
+      <div class="process-step reveal visible">
+        <div class="process-icon"><i class="fas fa-list-ol"></i><span class="process-step-num">02</span></div>
+        <h3>Prioritize</h3>
+        <p>Every finding gets ranked by impact, urgency, and cost to fix — not by what's easiest to talk about. You leave knowing exactly which bottleneck is costing you the most, and which ones can wait.</p>
+      </div>
+      <div class="process-step reveal visible">
+        <div class="process-icon"><i class="fas fa-hammer"></i><span class="process-step-num">03</span></div>
+        <h3>Build</h3>
+        <p>We don't hand you a strategy document and disappear. We build the actual system — the automation, the funnel, the SOP, the calculator — so the fix exists in your business, not in a file you'll open once.</p>
+      </div>
+      <div class="process-step reveal visible">
+        <div class="process-icon"><i class="fas fa-people-arrows"></i><span class="process-step-num">04</span></div>
+        <h3>Handoff</h3>
+        <p>Your team learns to run what we built, with documentation and a clear operating rhythm. The engagement ends with something you can operate without us. That's the whole point.</p>
+      </div>
+    </div>
+    <div class="process-cta reveal visible">
+      <a href="https://calendly.com/nanomunchai/free-strategy-call-nanomunch" class="btn-gold" target="_blank">Start With a Strategy Call →</a>
     </div>
   </div>
 </section>
