@@ -662,7 +662,13 @@ function submitForm(e) {
   let valid = true;
   if (!name) { valid = false; document.getElementById('fullname').classList.add('error'); } else { document.getElementById('fullname').classList.remove('error'); }
   if (!email || !email.includes('@')) { valid = false; document.getElementById('email').classList.add('error'); } else { document.getElementById('email').classList.remove('error'); }
-  if (phone && phoneInput && !phoneInput.isValidNumber()) { valid = false; document.getElementById('phone').classList.add('error'); } else { document.getElementById('phone').classList.remove('error'); }
+  // Phone validation temporarily disabled
+// if (phone && phoneInput && !phoneInput.isValidNumber()) {
+//   valid = false;
+//   document.getElementById('phone').classList.add('error');
+// } else {
+//   document.getElementById('phone').classList.remove('error');
+// }
 
   if (!valid) {
     alert('Please correct the highlighted fields.');
